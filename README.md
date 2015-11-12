@@ -8,4 +8,4 @@ Acts as an interface to CasperCG, provides a graphics operator the ability to fi
     - Maybe that means a lookup table of sorts, which refers to a plugin that returns a text string on every refresh?
     - Like `{{clock}}` refers to a function `make_clock` which returns a string
 * A plugin architecture of sorts - but only of the field-replacement variety (as above) for now...
-* Look nice.
+* Look nice (for James).
