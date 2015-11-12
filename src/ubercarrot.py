@@ -30,9 +30,12 @@ class MainWindow(wx.Frame):
         print "Adding SUBMIT button" # The important one
         self.button_submit = wx.Button(self, -1, "SUBMIT", style=wx.BU_BOTTOM)
 
+        # All together, now!
         sizer_window.Add(sizer_text_fields)
         sizer_window.Add(self.button_submit)
         self.SetSizerAndFit(sizer_window)
+
+        # Boom.
         self.Show()
 
 
