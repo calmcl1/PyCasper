@@ -9,3 +9,6 @@ Acts as an interface to CasperCG, provides a graphics operator the ability to fi
     - Like `{{clock}}` refers to a function `make_clock` which returns a string
 * A plugin architecture of sorts - but only of the field-replacement variety (as above) for now...
 * Look nice (for James).
+* Ooh, maybe have a *preview window*!
+    * Figure out a way to have Casper generate a second output for the preview window dynamically
+    * Or maybe have a Flash player panel, and see if we can get data into the Flash player...
