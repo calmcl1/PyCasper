@@ -52,7 +52,7 @@ class CasparTalker:
             video_channel=channel, layer=layer, cg_layer=cg_layer, template=template, play_on_load=play_on_load,
             data=data)
 
-        server.send_command(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_play(self, server, channel=1, layer=10, cg_layer=0):
         # CG [video_channel:int]{-[layer:int]|-9999} PLAY [cg_layer:int]
