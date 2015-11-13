@@ -40,6 +40,33 @@ class CasparTalker:
         if not amcp_command.endswith("\r\n"): amcp_command += "\r\n"
         server.send_command(amcp_command)
 
+    # Data commands - create and manipulate datasets
+
+    def data_store(self, server, name, data):
+        # DATA STORE [name:string] [data:string]
+        # Stores the dataset data under the name name.
+        # Directories will be created if they do not exist.
+
+        data = json.dumps(data) # Escape quotes, etc.
+        amcp_string = "DATA STORE {name} {data}".format(name=name, data=data)
+
+        self.send_command_to_caspar(server, amcp_string)
+
+    def data_retrieve(self, server, name):
+        # DATA RETRIEVE [name:string]
+        # Returns the data saved under the name name.
+        raise NotImplementedError
+
+    def data_list(self, server):
+        # DATA LIST
+        # Returns a list of all stored datasets.
+        raise NotImplementedError
+
+    def data_remove(self, server, name):
+        # DATA REMOVE [name:string]
+        # Removes the dataset saved under the name name.
+        raise NotImplementedError
+
     # CG Commands - manipulate Flash templates in Caspar
     def cg_add(self, server, template, channel=1, layer=10, cg_layer=0, play_on_load=0, data=None):
         # CG [video_channel:int]{-[layer:int]|-9999} ADD [cg_layer:int] [template:string] [play-on-load:0,1] {[data]}
