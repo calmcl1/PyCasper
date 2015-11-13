@@ -1,4 +1,5 @@
 import wx
+import caspartalk
 
 __author__ = 'Callum McLean'
 
@@ -7,6 +8,7 @@ class MainWindow(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title="UberCarrot", size=(-1, -1))
 
+        print "Loading UI..."
         sizer_window = wx.BoxSizer(wx.VERTICAL) # All the stuff goes in here.
 
         # We need lots of text fields, to enter text in!
@@ -22,12 +24,12 @@ class MainWindow(wx.Frame):
         for i in xrange(0, num_text_fields):
             text_field = wx.TextCtrl(self)
             text_field_label = wx.StaticText(self, -1, "f{0} text".format(i))
-            print "Adding text field: f{0}".format(i)
+            print "\tAdding text field: f{0}".format(i)
             controls = [text_field_label, text_field]
             self.textInputFields.append(controls)
             sizer_text_fields.AddMany(controls)
 
-        print "Adding SUBMIT button" # The important one
+        print "\tAdding SUBMIT button" # The important one
         self.button_submit = wx.Button(self, -1, "SUBMIT", style=wx.BU_BOTTOM)
 
         # All together, now!
