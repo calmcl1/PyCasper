@@ -14,3 +14,4 @@ Acts as an interface to CasperCG, provides a graphics operator the ability to fi
     * Or maybe have a Flash player panel, and see if we can get data into the Flash player...
 * Be able to save and recall graphics, pre-filled
     * Prepare graphics ahead of time, save them and load them back in when necessary
+        * This could be done by saving Caspar Datasets :)
