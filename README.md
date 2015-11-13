@@ -12,3 +12,5 @@ Acts as an interface to CasperCG, provides a graphics operator the ability to fi
 * Ooh, maybe have a *preview window*!
     * Figure out a way to have Casper generate a second output for the preview window dynamically
     * Or maybe have a Flash player panel, and see if we can get data into the Flash player...
+* Be able to save and recall graphics, pre-filled
+    * Prepare graphics ahead of time, save them and load them back in when necessary
