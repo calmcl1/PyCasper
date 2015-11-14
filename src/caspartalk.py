@@ -6,7 +6,7 @@ class CasparServer:
     # CasparServer sorts out all of the network-related stuff that's involved in interfacing with CasparCG.
     # This initiates the Telnet connection, holds the IP and port data, and suchlike.
     # The idea is that the CasparServer represents a connection to a given Caspar server.
-    # The user should instantiate a CasperTranslator to connect to Caspar, then when a CasperTalker/Listener
+    # The user should instantiate a CasparServer to connect to Caspar, then when a CasperTalker/Listener
     # needs to communicate with a Caspar server, that CasparServer instance is passed to it.
     #
     # Ex:
