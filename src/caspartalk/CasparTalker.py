@@ -1,6 +1,7 @@
 import json
 import caspartalk
 
+
 class CasparTalker:
     # CasparTalker is pretty much just responsible for two things:
     # Firstly, interpreting user commands and generating the right AMCP string
