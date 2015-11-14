@@ -1,4 +1,5 @@
 import telnetlib
+import socket
 
 
 class CasparServer:
@@ -14,14 +15,24 @@ class CasparServer:
     # ctalk = CasparTalker()
     # ctalk.cg_info(my_casper_server) # Or whatever, etc...
 
-    def __init__(self):
+    def __init__(self, server_ip=None, port=5250):
         self.server_ip = self.server_port = None
-        self.telnet = telnetlib.Telnet()
+        #self.telnet = telnetlib.Telnet()
+
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        if server_ip: self.connect(server_ip, port)
 
     def connect(self, server_ip="localhost", port=5250):
         self.server_ip = server_ip
         self.server_port = port
-        self.telnet.open(self.server_ip, self.server_port)
+        self.socket.connect((self.server_ip, self.server_port))
+        #self.telnet.open(self.server_ip, self.server_port)
+
+    def disconnect(self):
+        #self.telnet.close()
+        self.socket.close()
 
     def send_command(self, amcp_command):
-        self.telnet.write(amcp_command)
+        #self.telnet.write(amcp_command)
+        self.socket.sendall(amcp_command)
