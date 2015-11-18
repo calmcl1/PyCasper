@@ -39,3 +39,10 @@ class CasparServer:
         self.socket.sendall(amcp_command)
 
         return self.recv(self.buffer_size)
+
+    def read_lines(self):
+        f = self.socket.makefile('rw')
+        ret = f.readlines()
+
+        f.close()
+        return ret

@@ -13,6 +13,8 @@ class CasparTalker:
         if not amcp_command.endswith("\r\n"): amcp_command += "\r\n"
         server.send_command(amcp_command)
 
+        return server.read_lines()
+
     # Data commands - create and manipulate datasets
 
     def data_store(self, server, name, data):
@@ -130,4 +132,5 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} INFO {cg_layer}".format(video_channel=channel, layer=layer,
                                                                           cg_layer=cg_layer)
 
-        self.send_command_to_caspar(server, amcp_string)
+        ret = self.send_command_to_caspar(server, amcp_string)
+        print ret
