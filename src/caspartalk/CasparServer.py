@@ -17,6 +17,7 @@ class CasparServer:
 
     def __init__(self, server_ip=None, port=5250):
         self.server_ip = self.server_port = None
+        self.buffer_size = 4096
         #self.telnet = telnetlib.Telnet()
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,3 +37,5 @@ class CasparServer:
     def send_command(self, amcp_command):
         #self.telnet.write(amcp_command)
         self.socket.sendall(amcp_command)
+
+        return self.recv(self.buffer_size)
