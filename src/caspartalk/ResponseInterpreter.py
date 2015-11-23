@@ -1,5 +1,13 @@
+# This section is fairly self-explanatory.
+# When a command is passed to Caspar via AMCP, Caspar will generate a response
+# and pass it to STDOUT. Sometimes this is just a string informing the user
+# of the command status, and sometimes this is how Caspar passes data to a client.
+# interpret_response will take the first line of a Caspar message (always the command string) and
+# instruct UC on how to proceed - whether or not there is more data to be collected and how to collect it.
+
+
 def interpret_response(caspar_output):
-    r = caspar_output[0]
+    r = caspar_output[0] # The first line of a Caspar response is always the return code
     print r
     if r.startswith("100"): return parse_100()
     elif r.startswith("101"): return parse_101()
@@ -27,6 +35,7 @@ def interpret_response(caspar_output):
 #                   returns_more_data is true. Sometimes this is \r\n, sometimes \r\n\r\n
 
 # 100s: Information
+
 def parse_100():
     # 100 [action] - Information about an event.
     return "100 INFORMATION"

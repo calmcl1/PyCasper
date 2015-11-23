@@ -9,17 +9,17 @@ class CasparServer:
     # The user should instantiate a CasparServer to connect to Caspar, then when a CasperTalker/Listener
     # needs to communicate with a Caspar server, that CasparServer instance is passed to it.
     #
+    # Only the CasparServer should deal with socket operations, nobody else.
+    #
     # Ex:
-    # my_caspar_server = CasparServer()
-    # my_caspar_server.connect("192.168.1.50", 5250)
+    # my_caspar_server = CasparServer("192.168.1.50", 5250)
     # ctalk = CasparTalker()
     # ctalk.cg_info(my_casper_server) # Or whatever, etc...
 
     def __init__(self, server_ip=None, port=5250):
+        # Set up a connection a socket to connect with
         self.server_ip = self.server_port = None
         self.buffer_size = 4096
-        #self.telnet = telnetlib.Telnet()
-
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         if server_ip: self.connect(server_ip, port)
@@ -28,17 +28,12 @@ class CasparServer:
         self.server_ip = server_ip
         self.server_port = port
         self.socket.connect((self.server_ip, self.server_port))
-        #self.telnet.open(self.server_ip, self.server_port)
 
     def disconnect(self):
-        #self.telnet.close()
         self.socket.close()
 
     def send_command(self, amcp_command):
-        #self.telnet.write(amcp_command)
         self.socket.sendall(amcp_command)
-
-        #print self.socket.recv(self.buffer_size)
 
     def read_until(self, delimiter):
         s = ""

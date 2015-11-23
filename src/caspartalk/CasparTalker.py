@@ -3,9 +3,11 @@ import ResponseInterpreter
 
 
 class CasparTalker:
-    # CasparTalker is pretty much just responsible for two things:
-    # Firstly, interpreting user commands and generating the right AMCP string
-    # Secondly, sending the AMCP string to the CasparCG server.
+    # CasparTalker is kind of a translation layer between the interface and Casper's
+    # control protocol (currently AMCP).
+    # It will build the correct AMCP string for a given command, tell the
+    # CasparServer to send it, and handles the response.
+
     def __init__(self):
         pass
 
@@ -15,6 +17,9 @@ class CasparTalker:
         server.send_command(amcp_command)
 
         response = server.read_until("\r\n")
+
+        # ResponseInterpreter lets us know how to proceed - Caspar's way of sending information
+        # is a bit vague.
         to_do = ResponseInterpreter.interpret_response(response)
         if to_do[1]:
             return server.read_until(to_do[2])
