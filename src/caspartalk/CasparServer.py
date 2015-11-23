@@ -4,7 +4,7 @@ import socket
 
 class CasparServer:
     # CasparServer sorts out all of the network-related stuff that's involved in interfacing with CasparCG.
-    # This initiates the Telnet connection, holds the IP and port data, and suchlike.
+    # This initiates the socket connection, holds the IP and port data, and suchlike.
     # The idea is that the CasparServer represents a connection to a given Caspar server.
     # The user should instantiate a CasparServer to connect to Caspar, then when a CasperTalker/Listener
     # needs to communicate with a Caspar server, that CasparServer instance is passed to it.
@@ -38,11 +38,11 @@ class CasparServer:
         #self.telnet.write(amcp_command)
         self.socket.sendall(amcp_command)
 
-        return self.recv(self.buffer_size)
+        #print self.socket.recv(self.buffer_size)
 
-    def read_lines(self):
-        f = self.socket.makefile('rw')
-        ret = f.readlines()
+    def read_until(self, delimiter):
+        s = ""
+        while not s.endswith(delimiter):
+            s += self.socket.recv(1)
 
-        f.close()
-        return ret
+        return s.splitlines()
