@@ -52,7 +52,9 @@ class CasparTalker:
     def data_remove(self, server, name):
         # DATA REMOVE [name:string]
         # Removes the dataset saved under the name name.
-        raise NotImplementedError
+
+        amcp_string = "DATA REMOVE {name}".format(name=name)
+        self.send_command_to_caspar(server, amcp_string)
 
     # CG Commands - manipulate Flash templates in Caspar
     def cg_add(self, server, template, channel=1, layer=10, cg_layer=0, play_on_load=0, data=None):
@@ -66,7 +68,7 @@ class CasparTalker:
             video_channel=channel, layer=layer, cg_layer=cg_layer, template=template, play_on_load=play_on_load,
             data=data)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_play(self, server, channel=1, layer=10, cg_layer=0):
         # CG [video_channel:int]{-[layer:int]|-9999} PLAY [cg_layer:int]
@@ -75,7 +77,7 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} PLAY {cg_layer}".format(video_channel=channel,
                                                                           layer=layer, cg_layer=cg_layer)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_stop(self, server, channel=1, layer=10, cg_layer=0):
         # CG [video_channel:int]{-[layer:int]|-9999} STOP [cg_layer:int]
@@ -86,7 +88,7 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} STOP [cg_layer]".format(video_channel=channel, layer=layer,
                                                                           cg_layer=cg_layer)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_next(self, server, channel=1, layer=10, cg_layer=0):
         # CG [video_channel:int]{-[layer:int]|-9999} NEXT [cg_layer:int]
@@ -96,7 +98,7 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} NEXT {cg_layer}".format(video_channel=channel, layer=layer,
                                                                           cg_layer=cg_layer)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_remove(self, server, channel=1, layer=10, cg_layer=0):
         # CG [video_channel:int]{-[layer:int]|-9999} REMOVE [cg_layer:int]
@@ -105,7 +107,7 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} REMOVE {cg_layer}".format(video_channel=channel, layer=layer,
                                                                             cg_layer=cg_layer)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_clear(self, server, channel=1, layer=10):
         # CG [video_channel:int]{-[layer:int]|-9999} CLEAR
@@ -113,7 +115,7 @@ class CasparTalker:
 
         amcp_string = "CG {video_channel}-{layer} CLEAR".format(video_channel=channel, layer=layer)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_update(self, server, channel=1, layer=10, data=None):
         # CG [video_channel:int]{-[layer:int]|-9999} UPDATE [cg_layer:int] [data:string]
@@ -124,7 +126,7 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} UPDATE {cg_layer} {data}".format(video_channel=channel,
                                                                                    layer=layer, data=data)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_invoke(self, server, method, channel=1, layer=0, cg_layer=1):
         # CG [video_channel:int]{-[layer:int]|-9999} INVOKE [cg_layer:int] [method:string]
@@ -134,7 +136,7 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} INVOKE {cg_layer} {method}".format(video_channel=channel, layer=layer,
                                                                                      cg_layer=cg_layer, method=method)
 
-        print self.send_command_to_caspar(server, amcp_string)
+        self.send_command_to_caspar(server, amcp_string)
 
     def cg_info(self, server, channel=1, layer=10, cg_layer=1):
         # CG [video_channel:int]{-[layer:int]|-9999} INFO {[cg_layer:int]}
@@ -144,5 +146,4 @@ class CasparTalker:
         amcp_string = "CG {video_channel}-{layer} INFO {cg_layer}".format(video_channel=channel, layer=layer,
                                                                           cg_layer=cg_layer)
 
-        ret = self.send_command_to_caspar(server, amcp_string)
-        print ret
+        print self.send_command_to_caspar(server, amcp_string)

@@ -29,12 +29,12 @@ def interpret_response(caspar_output):
 # 100s: Information
 def parse_100():
     # 100 [action] - Information about an event.
-    raise NotImplementedError
+    return "100 INFORMATION"
 
 
 def parse_101():
     # 101 [action] - Information about an event. A line of data is being returned.
-    raise NotImplementedError
+    return "101 INFORMATION", True, "\r\n"
 
 
 # 200s: Successful
@@ -58,45 +58,45 @@ def parse_202():
 # 400s: Client Error
 def parse_400():
     # 400 ERROR	- Command not understood
-    raise NotImplementedError
+    return "400 ERROR: Command not understood", False
 
 
 def parse_401():
     # 401 [command] ERROR	- Illegal video_channel
-    raise NotImplementedError
+    return "401 ERROR: Illegal video_channel", False
 
 
 def parse_402():
     # 402 [command] ERROR	- Parameter missing
-    raise NotImplementedError
+    return "402 ERROR: Parameter missing", False
 
 
 def parse_403():
     # 403 [command] ERROR	- Illegal parameter
-    raise NotImplementedError
+    return "403 ERROR: Illegal parameter", False
 
 
 def parse_404():
     # 404 [command] ERROR	- Media file not found
-    raise NotImplementedError
+    return "404 ERROR - Media file not found", False
 
 
 # 500s: Server Error
 def parse_500():
     # 500 FAILED	- Internal server error
-    raise NotImplementedError
+    return "500 FAILED: Internal server error", False
 
 
 def parse_501():
     # 501 [command] FAILED	- Internal server error
-    raise NotImplementedError
+    return "501 FAILED: Internal server error", False
 
 
 def parse_502():
     # 502 [command] FAILED	- Media file unreadable
-    raise NotImplementedError
+    return "502 FAILED - Media file unreadable", False
 
 
 def parse_600():
     # 600 Not Implemented
-    raise NotImplementedError
+    return "600 Not Implemented", False
