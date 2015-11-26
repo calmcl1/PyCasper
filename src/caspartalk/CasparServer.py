@@ -1,4 +1,3 @@
-import telnetlib
 import socket
 
 
