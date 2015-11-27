@@ -8,8 +8,10 @@ __author__ = 'Callum McLean'
 class MainWindow(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title="UberCarrot", size=(-1, -1))
+        self.Bind(wx.EVT_CLOSE, self.on_close)
 
         self._mgr = aui.AuiManager()
+        self._mgr.SetAGWFlags(aui.AUI_MGR_LIVE_RESIZE | aui.AUI_MGR_USE_NATIVE_MINIFRAMES)
 
         # notify AUI which frame to use
         self._mgr.SetManagedWindow(self)
@@ -67,12 +69,17 @@ class MainWindow(wx.Frame):
 
         self.panel_cg_recall.SetSizerAndFit(sizer_cg_recall)
 
-        self._mgr.AddPane(self.panel_text_boxes, aui.AuiPaneInfo().Left().Caption("Pane Number One"))
-        self._mgr.AddPane(self.panel_cg_recall, aui.AuiPaneInfo().Right().Caption("Pane Number Two"))
+        self._mgr.AddPane(self.panel_text_boxes, wx.CENTER, 'Template Data')
+        self._mgr.AddPane(self.panel_cg_recall, wx.CENTER, 'Template Recall')
+
 
         self._mgr.Update()
         # Boom.
         self.Show()
+
+    def on_close(self, event):
+        self._mgr.UnInit()
+        self.Destroy()
 
 
 if __name__ == "__main__":
