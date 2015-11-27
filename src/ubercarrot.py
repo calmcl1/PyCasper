@@ -9,6 +9,10 @@ class MainWindow(wx.Frame):
         wx.Frame.__init__(self, None, title="UberCarrot", size=(-1, -1))
 
         print "Loading UI..."
+        # To avoid having the ugly dark-grey background on Windows, we'll use a wxPanel as the only child object
+        # of the wxFrame. All the control will be children of the wxPanel.
+        self.main_panel = wx.Panel(self, -1)
+
         sizer_frame = wx.BoxSizer(wx.HORIZONTAL)
         sizer_text_boxes = wx.BoxSizer(wx.VERTICAL) # All the text-stuff and the submit button goes in here.
 
@@ -23,15 +27,15 @@ class MainWindow(wx.Frame):
         self.textInputFields = []
 
         for i in xrange(0, num_text_fields):
-            text_field = wx.TextCtrl(self)
-            text_field_label = wx.StaticText(self, -1, "f{0} text".format(i))
+            text_field = wx.TextCtrl(self.main_panel)
+            text_field_label = wx.StaticText(self.main_panel, -1, "f{0} text".format(i))
             print "\tAdding text field: f{0}".format(i)
             controls = [text_field_label, text_field]
             self.textInputFields.append(controls)
             sizer_text_fields.AddMany(controls)
 
         print "\tAdding SUBMIT button" # The important one
-        self.button_submit = wx.Button(self, -1, "SUBMIT", style=wx.BU_BOTTOM)
+        self.button_submit = wx.Button(self.main_panel, -1, "SUBMIT", style=wx.BU_EXACTFIT)
 
         sizer_cg_recall = wx.BoxSizer(wx.VERTICAL) # We'll put all the 'Recall Template' buttons in here
 
@@ -39,7 +43,7 @@ class MainWindow(wx.Frame):
         self.template_buttons = []
         for i in xrange(0, num_templates):
             print "\tAdding recall button: #{0}".format(i)
-            btn = wx.Button(self, label="Recall Template {0}".format(i))
+            btn = wx.Button(self.main_panel, label="Recall Template {0}".format(i))
             self.template_buttons.append(btn)
             sizer_cg_recall.Add(btn)
 
@@ -47,7 +51,7 @@ class MainWindow(wx.Frame):
         sizer_text_boxes.Add(sizer_text_fields)
         sizer_text_boxes.Add(self.button_submit)
         sizer_frame.AddMany([sizer_text_boxes, sizer_cg_recall])
-        self.SetSizerAndFit(sizer_frame)
+        self.main_panel.SetSizer(sizer_frame)
 
         # Boom.
         self.Show()
