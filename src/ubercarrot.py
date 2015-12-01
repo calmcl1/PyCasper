@@ -70,7 +70,7 @@ class MainWindow(wx.Frame):
         self.panel_cg_recall.SetSizerAndFit(sizer_cg_recall)
 
         self._mgr.AddPane(self.panel_text_boxes, wx.CENTER, 'Template Data')
-        self._mgr.AddPane(self.panel_cg_recall, wx.CENTER, 'Template Recall')
+        self._mgr.AddPane(self.panel_cg_recall, wx.RIGHT, 'Template Recall')
 
 
         self._mgr.Update()
