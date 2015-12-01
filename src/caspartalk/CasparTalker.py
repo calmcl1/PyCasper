@@ -53,12 +53,18 @@ class CasparTalker:
 
         return templates
 
-    def version(self, server):
+    def version(self, server, component=None):
         # VERSION {[component:string]}
         # Returns the version of specified component.
-        # TODO: implement VERSION command
 
-        raise NotImplementedError
+        if component:
+            amcp_string = "VERSION {0}".format(component)
+        else:
+            amcp_string = "VERSION"
+
+        response = self.send_command_to_caspar(server, amcp_string)
+
+        if response: return response[0]
 
     def info(self, server):
         # INFO [video_channel:int]{-[layer:int]}
