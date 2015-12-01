@@ -88,10 +88,15 @@ class CasparTalker:
         if response: return response[0]
         else: return None
 
-    def info_template(self, server):
+    def info_template(self, server, template):
         # INFO TEMPLATE [template:string]
         # Gets information about the specified template.
-        # TODO: implement INFO TEMPLATE command
+        # TODO: implement INFO TEMPLATE command - though this can't really be done until CCG 2.1 is released
+
+        amcp_string = "INFO TEMPLATE {template}".format(template=template)
+
+        response = self.send_command_to_caspar(server, amcp_string)
+        for r in response: print r
 
         raise NotImplementedError
 
@@ -175,6 +180,8 @@ class CasparTalker:
     def data_remove(self, server, name):
         # DATA REMOVE [name:string]
         # Removes the dataset saved under the name name.
+        # fixme - a bug with CCG 2.0 means this doens't work, as CCG returns a code 200, rather than 201.
+        # This is fixed in CCG 2.1
 
         amcp_string = "DATA REMOVE {name}".format(name=name)
         self.send_command_to_caspar(server, amcp_string)
