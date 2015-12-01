@@ -9,6 +9,7 @@ class CasparTalker:
     # CasparServer to send it, and handles the response.
 
     def __init__(self):
+        # TODO: Run some of the INFO commands to get some info?
         pass
 
     def send_command_to_caspar(self, server, amcp_command):
@@ -28,7 +29,81 @@ class CasparTalker:
 
     # Query commands - return info about various things
 
-    # TODO: implement query commands
+
+    def tls(self, server):
+        # Lists all template files in the templates folder.
+        # Use the command INFO PATHS to get the path to the templates folder.
+        # TODO: implement TLS command
+
+        raise NotImplementedError
+
+    def version(self, server):
+        # VERSION {[component:string]}
+        # Returns the version of specified component.
+        # TODO: implement VERSION command
+
+        raise NotImplementedError
+
+    def info(self, server):
+        # INFO [video_channel:int]{-[layer:int]}
+        # Get information about a channel or a specific layer on a channel.
+        # If layer is omitted information about the whole channel is returned.7
+        # If both video_channel and layer are omitted, retrieves a list of the available
+        # channels
+        # TODO: implement INFO command
+
+        raise NotImplementedError
+
+    def info_template(self, server):
+        # INFO TEMPLATE [template:string]
+        # Gets information about the specified template.
+        # TODO: implement INFO TEMPLATE command
+
+        raise NotImplementedError
+
+    def info_config(self, server):
+        # INFO CONFIG
+        # Gets the contents of the configuration used.
+        # TODO: implement INFO CONFIG command
+
+        raise NotImplementedError
+
+    def info_paths(self, server):
+        # INFO PATHS
+        # Gets information about the paths used
+        # TODO: implement INFO PATHS command
+
+        raise NotImplementedError
+
+    def info_system(self, server):
+        # INFO SYSTEM
+        # Gets system information like OS, CPU and library version numbers.
+        # TODO: implement INFO SYSTEM command
+
+        raise NotImplementedError
+
+    def info_server(self, server):
+        # INFO SERVER
+        # Gets detailed information about all channels.
+        # TODO: implement INFO SERVER command
+
+        raise NotImplementedError
+
+    def bye(self, server):
+        # BYE
+        # Disconnects from the server if connected remotely,
+        # if interacting directly with the console on the machine Caspar is running on
+        # then this will achieve the same as the KILL command.
+        # TODO: implement BYE command
+
+        raise NotImplementedError
+
+    def kill(self, server):
+        # KILL
+        # Shuts the server down.
+        # TODO: implement KILL command
+
+        raise NotImplementedError
 
     # Data commands - create and manipulate datasets
 
