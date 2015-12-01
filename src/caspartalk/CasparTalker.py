@@ -9,10 +9,13 @@ class CasparTalker:
     # CasparServer to send it, and handles the response.
 
     def __init__(self, server=None):
-        self.paths = []
+        # TODO: Check we're using the right version of AMCP. This is currently 2.1
+
         # fixme: this is more a placeholder - make this actually work with the response of INFO PATHS
-        if server:
-            self.paths = self.info_paths(server)
+        #if server:
+            #paths_dec = []
+            #for p in self.info_paths(server):
+                # TODO: json decode this info
         pass
 
     def send_command_to_caspar(self, server, amcp_command):
@@ -35,9 +38,20 @@ class CasparTalker:
     def tls(self, server):
         # Lists all template files in the templates folder.
         # Use the command INFO PATHS to get the path to the templates folder.
-        # TODO: implement TLS command
 
-        raise NotImplementedError
+        amcp_string = "TLS"
+        templates_response = self.send_command_to_caspar(server, amcp_string)
+        templates = []
+
+        # The template list is returned in the following fashion (each line is an array entry):
+        # "RELATIVE-PATH/TEMPLATE-NAME" NUMBER TIMESTAMP
+        # We'll strip the first quote and everything after (and including) the last quote
+
+        for t in templates_response:
+            if not t[0] == '"': break
+            templates.append(t.split('"')[1])
+
+        return templates
 
     def version(self, server):
         # VERSION {[component:string]}
@@ -74,6 +88,11 @@ class CasparTalker:
         # INFO PATHS
         # Gets information about the paths used
         # TODO: implement INFO PATHS command
+
+        amcp_string = "INFO PATHS"
+
+        for l in self.send_command_to_caspar(server, amcp_string):
+            print l
 
         raise NotImplementedError
 

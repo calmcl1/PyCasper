@@ -1,5 +1,7 @@
 import socket
 
+from twisted.lore.tree import _LocalEntityResolver
+
 
 class CasparServer:
     # CasparServer sorts out all of the network-related stuff that's involved in interfacing with CasparCG.
@@ -23,6 +25,17 @@ class CasparServer:
 
         if server_ip: self.connect(server_ip, port)
 
+        # Set the paths relevant to the server
+        self.paths = {"media": "",
+                      "log": "",
+                      "data": "",
+                      "template": "",
+                      "thumbnails": "",
+                      "initial": ""}
+
+        # Set the list of templates available
+        self.templates = []
+
     def connect(self, server_ip="localhost", port=5250):
         self.server_ip = server_ip
         self.server_port = port
@@ -39,4 +52,13 @@ class CasparServer:
         while not s.endswith(delimiter):
             s += self.socket.recv(1)
 
-        return s.splitlines()
+        lines = s.splitlines()
+        ret = []
+
+        # Sometimes Caspar spits out some extraneous empty lines, which can throw us.
+        # Let's get rid of them.
+
+        for l in lines:
+            if len(l): ret.append(l)
+
+        return ret
