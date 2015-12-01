@@ -12,10 +12,10 @@ class CasparTalker:
         # TODO: Check we're using the right version of AMCP. This is currently 2.1
 
         # fixme: this is more a placeholder - make this actually work with the response of INFO PATHS
-        #if server:
-            #paths_dec = []
-            #for p in self.info_paths(server):
-                # TODO: json decode this info
+        # if server:
+        # paths_dec = []
+        # for p in self.info_paths(server):
+        # TODO: json decode this info
         pass
 
     def send_command_to_caspar(self, server, amcp_command):
@@ -48,7 +48,8 @@ class CasparTalker:
         # We'll strip the first quote and everything after (and including) the last quote
 
         for t in templates_response:
-            if not t[0] == '"': break
+            if not t[0] == '"':
+                break
             templates.append(t.split('"')[1])
 
         return templates
@@ -64,10 +65,12 @@ class CasparTalker:
 
         response = self.send_command_to_caspar(server, amcp_string)
 
-        if response: return response[0]
-        else: return None
+        if response:
+            return response[0]
+        else:
+            return None
 
-    def info(self, server, channel = None, layer = None):
+    def info(self, server, channel=None, layer=None):
         # INFO [video_channel:int]{-[layer:int]}
         # Get information about a channel or a specific layer on a channel.
         # If layer is omitted information about the whole channel is returned.
@@ -85,8 +88,10 @@ class CasparTalker:
 
         response = self.send_command_to_caspar(server, amcp_string)
 
-        if response: return response[0]
-        else: return None
+        if response:
+            return response[0]
+        else:
+            return None
 
     def info_template(self, server, template):
         # INFO TEMPLATE [template:string]
@@ -96,7 +101,8 @@ class CasparTalker:
         amcp_string = "INFO TEMPLATE {template}".format(template=template)
 
         response = self.send_command_to_caspar(server, amcp_string)
-        for r in response: print r
+        for r in response:
+            print r
 
         raise NotImplementedError
 
@@ -168,7 +174,7 @@ class CasparTalker:
         amcp_string = "DATA RETRIEVE {name}".format(name=name)
 
         data = self.send_command_to_caspar(server, amcp_string)
-        print data
+        return data
 
     def data_list(self, server):
         # DATA LIST
@@ -176,6 +182,7 @@ class CasparTalker:
 
         amcp_string = "DATA LIST"
         data = self.send_command_to_caspar(server, amcp_string)
+        return data
 
     def data_remove(self, server, name):
         # DATA REMOVE [name:string]
