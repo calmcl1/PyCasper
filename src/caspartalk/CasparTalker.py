@@ -65,16 +65,28 @@ class CasparTalker:
         response = self.send_command_to_caspar(server, amcp_string)
 
         if response: return response[0]
+        else: return None
 
-    def info(self, server):
+    def info(self, server, channel = None, layer = None):
         # INFO [video_channel:int]{-[layer:int]}
         # Get information about a channel or a specific layer on a channel.
-        # If layer is omitted information about the whole channel is returned.7
+        # If layer is omitted information about the whole channel is returned.
         # If both video_channel and layer are omitted, retrieves a list of the available
         # channels
-        # TODO: implement INFO command
 
-        raise NotImplementedError
+        if channel:
+            if layer:
+                amcp_string = "INFO {video_channel}-{layer}".format(video_channel=channel,
+                                                                    layer=layer)
+            else:
+                amcp_string = "INFO {video_channel}".format(video_channel=channel)
+        else:
+            amcp_string = "INFO"
+
+        response = self.send_command_to_caspar(server, amcp_string)
+
+        if response: return response[0]
+        else: return None
 
     def info_template(self, server):
         # INFO TEMPLATE [template:string]
