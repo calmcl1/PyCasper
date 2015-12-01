@@ -26,6 +26,10 @@ class CasparTalker:
         else:
             return None
 
+    # Query commands - return info about various things
+
+    # TODO: implement query commands
+
     # Data commands - create and manipulate datasets
 
     def data_store(self, server, name, data):
