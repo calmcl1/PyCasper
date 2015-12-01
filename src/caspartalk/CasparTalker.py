@@ -8,8 +8,11 @@ class CasparTalker:
     # It will build the correct AMCP string for a given command, tell the
     # CasparServer to send it, and handles the response.
 
-    def __init__(self):
-        # TODO: Run some of the INFO commands to get some info?
+    def __init__(self, server=None):
+        self.paths = []
+        # fixme: this is more a placeholder - make this actually work with the response of INFO PATHS
+        if server:
+            self.paths = self.info_paths(server)
         pass
 
     def send_command_to_caspar(self, server, amcp_command):
@@ -28,7 +31,6 @@ class CasparTalker:
             return None
 
     # Query commands - return info about various things
-
 
     def tls(self, server):
         # Lists all template files in the templates folder.
