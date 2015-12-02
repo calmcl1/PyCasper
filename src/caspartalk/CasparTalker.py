@@ -1,4 +1,5 @@
 import json
+import xml.etree.cElementTree as CET
 import ResponseInterpreter
 
 
@@ -44,7 +45,7 @@ class CasparTalker:
         templates = []
 
         # The template list is returned in the following fashion (each line is an array entry):
-        # "RELATIVE-PATH/TEMPLATE-NAME" NUMBER TIMESTAMP
+        # "RELATIVE-PATH/TEMPLATE-NAME" SIZE-IN-BYTES TIMESTAMP
         # We'll strip the first quote and everything after (and including) the last quote
 
         for t in templates_response:
@@ -111,19 +112,34 @@ class CasparTalker:
         # Gets the contents of the configuration used.
         # TODO: implement INFO CONFIG command
 
+        amcp_string = "INFO CONFIG"
+
+        response = self.send_command_to_caspar(server, amcp_string)
+
+        if response: print response
+
         raise NotImplementedError
 
     def info_paths(self, server):
         # INFO PATHS
         # Gets information about the paths used
-        # TODO: implement INFO PATHS command
 
         amcp_string = "INFO PATHS"
+        response = self.send_command_to_caspar(server, amcp_string)
 
-        for l in self.send_command_to_caspar(server, amcp_string):
-            print l
+        if not response: return None
 
-        raise NotImplementedError
+        paths = {}
+        root = CET.fromstringlist(response)
+
+        for elem in root:
+            if "-path" in elem.tag:
+                # Huzzah, we've found a path!
+                print "Found", elem.tag, elem.text
+                paths[elem.tag.split("-")[0]] = elem.text
+                elem.clear()
+
+        return paths
 
     def info_system(self, server):
         # INFO SYSTEM
