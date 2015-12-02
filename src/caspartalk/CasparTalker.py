@@ -1,5 +1,7 @@
 import json
 import xml.etree.cElementTree as CET
+import StringIO
+import string
 import ResponseInterpreter
 
 
@@ -130,9 +132,9 @@ class CasparTalker:
         if not response: return None
 
         paths = {}
-        root = CET.fromstringlist(response)
+        # root = CET.fromstringlist(response)
 
-        for elem in root:
+        for event, elem in CET.iterparse(StringIO.StringIO(string.join(response, ""))):
             if "-path" in elem.tag:
                 # Huzzah, we've found a path!
                 print "Found", elem.tag, elem.text
@@ -145,6 +147,11 @@ class CasparTalker:
         # INFO SYSTEM
         # Gets system information like OS, CPU and library version numbers.
         # TODO: implement INFO SYSTEM command
+
+        amcp_string = "INFO SYSTEM"
+
+        response = self.send_command_to_caspar(server, amcp_string)
+        for r in response: print r
 
         raise NotImplementedError
 
