@@ -15,4 +15,7 @@ Acts as an interface to CasperCG, provides a graphics operator the ability to fi
 * Be able to save and recall graphics, pre-filled
     * Prepare graphics ahead of time, save them and load them back in when necessary
         * This could be done by saving Caspar Datasets :)
+    * Number-based? As in a graphic and associated content could be assigned a given number
+        * When the number is keyed in (numpad only?), the graphic + content is recalled together, pre-filled
+        * **Let's be honest, we're basically appropriating features from Chyron Lyric here ;)**
 * Shortcut keys - animate/de-animate?
