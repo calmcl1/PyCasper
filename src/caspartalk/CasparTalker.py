@@ -112,15 +112,26 @@ class CasparTalker:
     def info_config(self, server):
         # INFO CONFIG
         # Gets the contents of the configuration used.
-        # TODO: implement INFO CONFIG command
 
         amcp_string = "INFO CONFIG"
 
         response = self.send_command_to_caspar(server, amcp_string)
+        response = StringIO.StringIO(string.join(response, ""))
 
-        if response: print response
+        config = {}
 
-        raise NotImplementedError
+        for event, elem in CET.iterparse(response):
+
+            if "path" in elem.tag:
+                print "Skipping <paths> - use INFO PATHS instead"
+                elem.clear()
+            else:
+                config[elem.tag] = elem.text
+                elem.clear()
+
+        # Just as a point, this doesn't really return anything useful yet, but we'll send something back anyway.
+
+        return config
 
     def info_paths(self, server):
         # INFO PATHS
@@ -132,9 +143,9 @@ class CasparTalker:
         if not response: return None
 
         paths = {}
-        # root = CET.fromstringlist(response)
+        response = StringIO.StringIO(string.join(response, ""))
 
-        for event, elem in CET.iterparse(StringIO.StringIO(string.join(response, ""))):
+        for event, elem in CET.iterparse(response):
             if "-path" in elem.tag:
                 # Huzzah, we've found a path!
                 print "Found", elem.tag, elem.text
@@ -148,10 +159,17 @@ class CasparTalker:
         # Gets system information like OS, CPU and library version numbers.
         # TODO: implement INFO SYSTEM command
 
-        amcp_string = "INFO SYSTEM"
+        #amcp_string = "INFO SYSTEM"
 
-        response = self.send_command_to_caspar(server, amcp_string)
-        for r in response: print r
+        #response = self.send_command_to_caspar(server, amcp_string)
+        #for r in response: print r
+        #response = StringIO.StringIO(string.join(response, ""))
+
+        #for event, elem in CET.iterparse(response):
+        #    if elem.tag == "paths":
+        #        print "Skipping <paths> - use INFO PATHS instead"
+        #        elem.clear()
+        #    else: print CET.dump(elem)
 
         raise NotImplementedError
 
