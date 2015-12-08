@@ -185,9 +185,13 @@ class CasparTalker:
         # Disconnects from the server if connected remotely,
         # if interacting directly with the console on the machine Caspar is running on
         # then this will achieve the same as the KILL command.
-        # TODO: implement BYE command
+        # TODO: implement BYE
 
-        raise NotImplementedError
+        amcp_string = "BYE"
+
+        self.send_command_to_caspar(server, amcp_string)
+
+        return True
 
     def kill(self, server):
         # KILL
