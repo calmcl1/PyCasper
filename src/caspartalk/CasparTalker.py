@@ -14,6 +14,7 @@ class CasparTalker:
     def __init__(self, server=None):
         # TODO: Check we're using the right version of AMCP. This is currently 2.1
 
+        # TODO: Should this really be here, or a part of CasparServer, since it changes a CasparServer property?
         if server:
             server.paths = self.info_paths(server)
 
