@@ -14,12 +14,8 @@ class CasparTalker:
     def __init__(self, server=None):
         # TODO: Check we're using the right version of AMCP. This is currently 2.1
 
-        # fixme: this is more a placeholder - make this actually work with the response of INFO PATHS
-        # if server:
-        # paths_dec = []
-        # for p in self.info_paths(server):
-        # TODO: json decode this info
-        pass
+        if server:
+            server.paths = self.info_paths(server)
 
     def send_command_to_caspar(self, server, amcp_command):
         print "Sending command:", amcp_command
