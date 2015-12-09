@@ -9,12 +9,18 @@ This mostly happens by using Caspar/SVT AMCP commands over a TCP socket and work
 Using UberCarrot
 ================
 
+Creating Graphics On-The-Fly
+----------------------------
+
 For example, the process of taking a graphic (let's say a lower third) on air might be:
 
 #. Open the graphic template (located on the CasparCG server) in UberCarrot.
 #. The template will contain text fields that we can fill in. Use the text boxes in UberCarrot to fill these in.
 #. Click the *Animate* button on the UberCarrot window. This will instruct CasparCG to take the graphic to air.
 #. When we want the graphic to disappear from the output, clicking the *De-animate* button will instruct CasparCG to let the Flash template to play through the last section of its animation, which typically takes the graphic off the screen.
+
+Creating Graphics In Advance
+----------------------------
 
 However, if we want, we can create the graphic ahead of time, and save it. Later, when we need it, we can recall the graphic (including the contents of the text-boxes) and play it out.
 
