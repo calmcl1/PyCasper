@@ -7,8 +7,8 @@ class CasparServer:
     """
     .. py:class CasparTalker
 
-    :param str server_ip: The IP address of the CasparCG server that we want to communicate with.
-    :param int port: The port that the CasparCG server at *server_ip* is listening for AMCP commands on.
+    :param str server_ip: The IP address of the CasparCG server that we want to communicate with (optional).
+    :param int port: The port that the CasparCG server at *server_ip* is listening for AMCP commands on (optional).
 
     Represents a Caspar Server instance.
 
@@ -20,14 +20,15 @@ class CasparServer:
 
     Only the CasparServer should deal with socket operations, nobody else.
 
-    Ex:
+    Example:
 
         >>> my_caspar_server = CasparServer("192.168.1.50", 5250)
         >>> ctalk = CasparTalker()
         >>> ctalk.cg_info(my_casper_server) # Or whatever, etc...
 
+    If the *server_ip* parameter is given, the method will also call :py:meth:`~caspartalk.CasparServer.connect`, also \
+    using the *port* if provided.
     """
-    #
 
     def __init__(self, server_ip=None, port=5250):
         # Set up a connection a socket to connect with
@@ -50,8 +51,8 @@ class CasparServer:
 
     def connect(self, server_ip="localhost", port=5250):
         """
-        .. py:method connect([server [,port ]])
-        
+        .. py:method connect(server, [port=5250])
+
         :param server_ip:
         :param port:
         :return:
