@@ -4,6 +4,11 @@ from twisted.lore.tree import _LocalEntityResolver
 
 
 class CasparServer:
+    """
+    .. py:class CasparTalker
+
+    Represents a Caspar Server instance.
+    """
     # CasparServer sorts out all of the network-related stuff that's involved in interfacing with CasparCG.
     # This initiates the socket connection, holds the IP and port data, and suchlike.
     # The idea is that the CasparServer represents a connection to a given Caspar server.

@@ -6,6 +6,11 @@ import ResponseInterpreter
 
 
 class CasparTalker:
+    """
+    .. py:class CasparTalker
+
+    Does cool shit.
+    """
     # CasparTalker is kind of a translation layer between the interface and Casper's
     # control protocol (currently AMCP).
     # It will build the correct AMCP string for a given command, tell the

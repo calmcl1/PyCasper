@@ -1,11 +1,15 @@
 import wx
 import wx.lib.agw.aui as aui
+import caspartalk
 
 
 __author__ = 'Callum McLean'
 
 
 class MainWindow(wx.Frame):
+    """
+    Does a thing, makes a thing happen
+    """
     def __init__(self):
         wx.Frame.__init__(self, None, title="UberCarrot", size=(-1, -1))
         self.Bind(wx.EVT_CLOSE, self.on_close)
@@ -78,6 +82,11 @@ class MainWindow(wx.Frame):
         self.Show()
 
     def on_close(self, event):
+        """
+        Do a thing to make a thing happen
+        :param event: The event provided by wxWindows
+        :return:
+        """
         self._mgr.UnInit()
         self.Destroy()
 
