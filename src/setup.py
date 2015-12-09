@@ -4,7 +4,7 @@ setup(
     name='UberCarrot',
     version='0.1a1',
     packages=['caspartalk'],
-    package_dir={'caspartalk': 'caspartalk'},
+    package_dir={'', 'src'},
     url='',
     license='',
     author='Callum McLean',
