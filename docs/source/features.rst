@@ -3,7 +3,7 @@ What Can UberCarrot Do?
 
 Ultimately, at the moment: *not much*.
 
-It's fair to say that this is still very much a work-in progress, and in the **alpha** stage of it's lifecycle.
+It's fair to say that this is still very much a work-in progress, and in the **alpha** stage of its lifecycle.
 
 However, UC aspires to grand things! Here's what we *intend* to do (at the current stage):
 
