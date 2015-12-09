@@ -8,8 +8,12 @@ Welcome to UberCarrot's documentation!
 
 Contents:
 
-.. toctree::
-   :maxdepth: 2
+..  toctree::
+    :maxdepth: 2
+
+    intro
+    features
+    glossary
 
 
 
