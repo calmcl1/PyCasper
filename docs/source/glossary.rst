@@ -1,3 +1,4 @@
+========
 Glossary
 ========
 
@@ -11,7 +12,7 @@ Glossary
 
     Character generator
     Graphics machine
-        Primarily used in TV, a character generator (CG) is a computer that creates on-screen graphics that can be keyed over an image. Some of then most common graphics that CGs create include lower-third straps (that might show the name of a TV presenter) or leaderboards in sports programmes.
+        Primarily used in TV, a character generator (CG) is a computer that creates on-screen graphics that can be keyed over an image. Some of the most common graphics that CGs create include lower-third straps (that might show the name of a TV presenter) or leaderboards in sports programmes.
 
     SVT
         *Sveriges Television*, the Swedish national broadcasting organisation, and developers of CasparCG. They use CasparCG to control the output of their 6 TV channels.
