@@ -18,7 +18,7 @@ For example, the process of taking a graphic (let's say a lower third) on air mi
 
 However, if we want, we can create the graphic ahead of time, and save it. Later, when we need it, we can recall the graphic (including the contents of the text-boxes) and play it out.
 
-.. warning:: this workflow is not even close to confirmed, and may change later.
+.. warning:: This workflow is not even close to confirmed, and may change later.
 
 #. Choose a unique numeric ID (1-9999) for the graphic that you want to create. Type it in using the **numpad**. Press :kbd:`Enter`.
 #. Open the graphic template as above.
