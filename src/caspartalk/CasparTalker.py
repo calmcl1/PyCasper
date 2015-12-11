@@ -7,9 +7,16 @@ import ResponseInterpreter
 
 class CasparTalker:
     """
-    .. py:class CasparTalker
+    .. py:class:: CasparTalker
 
-    Does cool shit.
+    *CasparTalker* provides a simple way to call :term:`AMCP` commands from Python. The *CasparTalker* class is \
+    responsible for building the AMCP command strings, sending them to a :py:class:`~caspartalk.CasparServer`, and \
+    handling any response from the *CasparServer*.
+
+    However, this is **not** used to handle direct interactions with a physical CasparCG server - use \
+    py:class:`~caspartalk.CasparServer` to handle the TCP connection to the server, then use *CasparTalker* to build \
+    the AMCP commands.
+
     """
     # CasparTalker is kind of a translation layer between the interface and Casper's
     # control protocol (currently AMCP).
@@ -17,6 +24,13 @@ class CasparTalker:
     # CasparServer to send it, and handles the response.
 
     def __init__(self, server=None):
+        """
+        .. py:method:: __init__([server])
+
+        :param CasparServer server: The :py:class:`~caspartalk.CasparServer` that CasparTalker should use to get initial \
+        data (Optional).
+        """
+
         # TODO: Check we're using the right version of AMCP. This is currently 2.1
 
         # TODO: Should this really be here, or a part of CasparServer, since it changes a CasparServer property?
@@ -24,6 +38,17 @@ class CasparTalker:
             server.paths = self.info_paths(server)
 
     def send_command_to_caspar(self, server, amcp_command):
+        """
+        .. py:method:: send_command_to_caspar(server, amcp_command)
+
+        Sends an string containing an AMCP command to a specified CasparCG server.
+
+        :param CasparServer server: the :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
+        :param str amcp_command: The AMCP command string that will be sent to the CasparCG server.
+        :return: Any response from the CasparCG server will be returned. If there is no response other than the \
+        command status string, ``None`` will be returned. This might change in the future...
+
+        """
         print "Sending command:", amcp_command
         if not amcp_command.endswith("\r\n"): amcp_command += "\r\n"
         server.send_command(amcp_command)
@@ -41,8 +66,16 @@ class CasparTalker:
     # Query commands - return info about various things
 
     def tls(self, server):
-        # Lists all template files in the templates folder.
-        # Use the command INFO PATHS to get the path to the templates folder.
+        """
+        .. py:method:: tls(server)
+
+        Lists all template files in the templates folder.
+        Use the command INFO PATHS to get the path to the templates folder.
+
+        :param CasparServer server: the :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
+        :rtype: List or None.
+        :return: A list containing the relative path and name of all the templates in the CCG templates folder.
+        """
 
         amcp_string = "TLS"
         templates_response = self.send_command_to_caspar(server, amcp_string)
@@ -60,6 +93,20 @@ class CasparTalker:
         return templates
 
     def version(self, server, component=None):
+        """
+
+        .. py:method:: version(server, [component])
+
+        Returns the version of the specified component. If *component* is None, then a list of all of the components \
+        available will be returned.
+
+        :param CasparServer server: The :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
+        :param str or None component: The component to query the version of.
+        :rtype: List
+        :return: A list containing either the version of the component queried, or of all of the components available.
+        """
+
+
         # VERSION {[component:string]}
         # Returns the version of specified component.
 
