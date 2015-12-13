@@ -200,9 +200,9 @@ class CasparTalker:
         """
         Gets information about the paths used in the CasparCG Server configuration.
 
-        The returned List will contain a single entry, that contains a Dict, of the format:
+        The returned List will contain a single entry, that contains a Dict, of the format:::
 
-        >>> {path_name: relative_path,
+            {path_name: relative_path,
             ... }
 
         The *key* will be the name of the path (template, media, etc.), and the value will be the path itself, relative
