@@ -1,14 +1,9 @@
 import socket
 
-from twisted.lore.tree import _LocalEntityResolver
-
-
 class CasparServer:
     """
-    .. py:class:: CasparTalker(server_ip, [port])
-
-    :param str server_ip: The IP address of the CasparCG server that we want to communicate with (optional).
-    :param int port: The port that the CasparCG server at *server_ip* is listening for AMCP commands on (optional).
+    :param str server_ip: The IP address of the CasparCG server that we want to communicate with.
+    :param int port: The port that the CasparCG server at *server_ip* is listening for AMCP commands on.
 
     Represents a Caspar Server instance.
 
@@ -52,12 +47,10 @@ class CasparServer:
 
     def connect(self, server_ip="localhost", port=5250):
         """
-        .. py:method:: caspartalk.CasparServer.connect(server, [port=5250])
-
         This will open and connect to a TCP socket in order to communicate with a CasparCG server, using the provided \
         IP or hostname and port.
 
-        :param server_ip: The IP or hostname of the CasparCG server that you're connecting to (Optional).
+        :param server_ip: The IP or hostname of the CasparCG server that you're connecting to.
         :param port: The port of the CasparCG server at the IP or hostname *server_ip*.
 
         """
@@ -67,8 +60,6 @@ class CasparServer:
 
     def disconnect(self):
         """
-        .. py:method:: disconnect
-
         Disconnects from the CasparCG server that we are connected to.
 
         """
@@ -76,8 +67,6 @@ class CasparServer:
 
     def send_command(self, amcp_command):
         """
-        .. py:method:: send_command(amcp_command)
-
         Sends an AMCP string to CasparCG, using the socket created using :py:meth:`~caspartalk.CasparServer.connect`.
 
         :param str amcp_command: The AMCP command string to send to CasparCG.
@@ -87,8 +76,6 @@ class CasparServer:
 
     def read_until(self, delimiter):
         """
-        .. py:method:: read_until(delimiter)
-
         Reads the output from a CasparCG server over the socket created using \
         :py:meth:`~caspartalk.CasparServer.connect`. Continues reading until the *delimiter* character sequence is \
         found in the stream. This is useful when we know what character sequence will terminate a message from CasparCG.
@@ -98,6 +85,7 @@ class CasparServer:
         :return: The string that CasparCG has sent, until the first instance of *delimiter*
 
         """
+
         s = ""
         while not s.endswith(delimiter):
             s += self.socket.recv(1)
