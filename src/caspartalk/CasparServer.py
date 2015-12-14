@@ -1,4 +1,7 @@
 import socket
+import AMCP
+import ResponseInterpreter
+
 
 class CasparServer:
     """
@@ -8,18 +11,15 @@ class CasparServer:
     Represents a Caspar Server instance.
 
     CasparServer sorts out all of the network-related stuff that's involved in interfacing with CasparCG.
-    This initiates the socket connection, holds the IP and port data, and suchlike.
-    The idea is that the CasparServer represents a connection to a given Caspar server.
-    The user should instantiate a CasparServer to connect to Caspar, then when a CasperTalker
-    needs to communicate with a Caspar server, that CasparServer instance is passed to it.
 
-    Only the CasparServer should deal with socket operations, nobody else.
+    Upon connection, it will access the CasparCG server and find as much information as possible about it, and store it
+    here. The idea is that the user should never have to think about the physical CasparCG server, and that this
+    should be a perfect analogue.
 
     Example:
 
         >>> my_caspar_server = CasparServer("192.168.1.50", 5250)
-        >>> ctalk = CasparTalker()
-        >>> ctalk.cg_info(my_casper_server) # Or whatever, etc...
+        >>> AMCP.cg_info(my_casper_server) # Or whatever, etc...
 
     If the *server_ip* parameter is given, the method will also call :py:meth:`~caspartalk.CasparServer.connect`, also \
     using the *port* if provided.
@@ -45,6 +45,9 @@ class CasparServer:
         # Set the list of templates available
         self.templates = []
 
+        # Set the list of media files available
+        self.media = []
+
     def connect(self, server_ip="localhost", port=5250):
         """
         This will open and connect to a TCP socket in order to communicate with a CasparCG server, using the provided \
@@ -58,21 +61,23 @@ class CasparServer:
         self.server_port = port
         self.socket.connect((self.server_ip, self.server_port))
 
+        self.media = self.get_media_on_server()
+        self.templates = self.get_templates_on_server()
+
     def disconnect(self):
         """
         Disconnects from the CasparCG server that we are connected to.
-
         """
         self.socket.close()
 
-    def send_command(self, amcp_command):
+    def send_string(self, command_string):
         """
-        Sends an AMCP string to CasparCG, using the socket created using :py:meth:`~caspartalk.CasparServer.connect`.
+        Sends a string to CasparCG, using the socket created using :py:meth:`~caspartalk.CasparServer.connect`.
 
-        :param str amcp_command: The AMCP command string to send to CasparCG.
+        :param str command_string: The AMCP command string to send to CasparCG.
 
         """
-        self.socket.sendall(amcp_command)
+        self.socket.sendall(command_string)
 
     def read_until(self, delimiter):
         """
@@ -100,3 +105,37 @@ class CasparServer:
             if len(l): ret.append(l)
 
         return ret
+
+    def send_amcp_command(self, amcp_command):
+        """
+        Sends a string containing an AMCP command to a specified CasparCG server.
+
+        :param str amcp_command: The AMCP command string that will be sent to the CasparCG server.
+        :return: Any response from the CasparCG server will be returned. If there is no response other than the \
+        command status string, ``None`` will be returned. This might change in the future...
+
+        """
+
+        print "Sending command:", amcp_command
+        if not amcp_command.endswith("\r\n"): amcp_command += "\r\n"
+        self.send_string(amcp_command)
+
+        response = self.read_until("\r\n")
+
+        # ResponseInterpreter lets us know how to proceed - Caspar's way of sending information
+        # is a bit vague.
+        to_do = ResponseInterpreter.interpret_response(response)
+        if to_do[1]:
+            return self.read_until(to_do[2])
+        else:
+            return None
+
+    def get_media_on_server(self):
+        # TODO: Implement CasparServer.get_media_on_server
+        # Use CasparObjects.Media
+        raise NotImplementedError
+
+    def get_templates_on_server(self):
+        # TODO: Implement CasparServer.get_media_on_server
+        # Use CasparObjects.Template
+        raise NotImplementedError

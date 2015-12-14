@@ -1,12 +1,9 @@
-==========
 CasparTalk
 ==========
 
 .. automodule:: caspartalk
 
-.. autoclass:: caspartalk.CasparServer
-    :members:
+.. toctree::
 
-.. autoclass:: caspartalk.CasparTalker
-    :members:
-
+    AMCP
+    casparObjects

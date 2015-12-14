@@ -14,8 +14,7 @@ UberCarrot is created from two different parts:
 Contents:
 
 ..  toctree::
-    :maxdepth: 2
-    :glob:
+    :maxdepth: 20
 
     intro
     features
