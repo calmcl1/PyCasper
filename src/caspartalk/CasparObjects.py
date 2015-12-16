@@ -1,3 +1,6 @@
+import AMCP
+
+
 class CasparObject:
     """
     A generic CasparCG Object.
@@ -57,7 +60,9 @@ class Template(CasparObject):
     def __init__(self, file_name):
         CasparObject.__init__(self)
 
-        self.file_name = file_name
+        self.file_name = file_name # The name of the file + relative directory to CCG templates folder
+        self.owner_server = None # The server that the template exists on
+
         self.version = None
         self.author_name = None
         self.author_email = None
@@ -71,13 +76,34 @@ class Template(CasparObject):
         self.parameters = {}
 
     def check_exists(self):
-        pass
+        """
+        .. warning:: This method has not been implemented in UberCarrot yet!
+
+        :return:
+        """
+
+        # TODO: implement caspartalk.CasparObjects.Template.check_exists()
+        raise NotImplementedError
 
     def retrieve_info(self):
-        pass
+        """
+        .. warning:: This method has not been implemented in UberCarrot yet!
+        """
+
+        # TODO: implement caspartalk.CasparObjects.Template.retrieve_info()
+
+        response = AMCP.info_template(self.owner_server, self.file_name)
+
+        raise NotImplementedError
 
     def get_parameters(self):
-        pass
+        """
+        .. warning:: This method has not been implemented in UberCarrot yet!
+
+        :return:
+        """
+        # TODO: implement caspartalk.CasparObjects.Template.get_parameters()
+        raise NotImplementedError
 
 
 class Media(CasparObject):
