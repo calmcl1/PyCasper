@@ -118,7 +118,13 @@ def info_template(server, template):
     for r in response:
         print r
 
+    template = CasparObjects.Template(template)
+
+    template.owner_server = server
+
     raise NotImplementedError
+
+    return template
 
 
 def info_config(server):
