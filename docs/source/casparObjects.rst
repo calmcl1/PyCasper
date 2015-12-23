@@ -1,9 +1,6 @@
 Caspar Objects
 --------------
 
-.. autoclass:: caspartalk.CasparServer
-    :members:
-
 .. autoclass:: caspartalk.CasparObjects.CasparObject
     :members:
 
