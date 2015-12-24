@@ -48,6 +48,9 @@ class CasparServer:
         # Set the list of media files available
         self.media = []
 
+        # self.media = self.get_media_on_server()
+        self.templates = self.get_templates_on_server()
+
     def connect(self, server_ip="localhost", port=5250):
         """
         This will open and connect to a TCP socket in order to communicate with a CasparCG server, using the provided \
@@ -60,9 +63,6 @@ class CasparServer:
         self.server_ip = server_ip
         self.server_port = port
         self.socket.connect((self.server_ip, self.server_port))
-
-        #self.media = self.get_media_on_server()
-        #self.templates = self.get_templates_on_server()
 
     def disconnect(self):
         """
@@ -136,6 +136,11 @@ class CasparServer:
         raise NotImplementedError
 
     def get_templates_on_server(self):
-        # TODO: Implement CasparServer.get_media_on_server
-        # Use CasparObjects.Template
-        raise NotImplementedError
+        template_fn_list = AMCP.tls(self)
+        template_list = []
+        for t in template_fn_list:
+            tmpl = AMCP.info_template(self, t)
+            if tmpl:
+                template_list.append(tmpl)
+
+        return template_list

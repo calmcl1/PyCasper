@@ -79,6 +79,9 @@ class Template(CasparObject):
 
         raise NotImplementedError
 
+    def __repr__(self):
+        return str(type(self).__name__ + " " + self.file_name)
+
 
 class TemplateParameter(object):
     """
