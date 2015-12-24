@@ -68,17 +68,6 @@ class Template(CasparObject):
         self.instances = {}
         self.parameters = TypedDict(TemplateParameter)
 
-    def retrieve_info(self):
-        """
-        .. warning:: This method has not been implemented in UberCarrot yet!
-        """
-
-        # TODO: implement caspartalk.CasparObjects.Template.retrieve_info()
-
-        response = AMCP.info_template(self.owner_server, self.file_name)
-
-        raise NotImplementedError
-
     def __repr__(self):
         return str(type(self).__name__ + " " + self.file_name)
 
