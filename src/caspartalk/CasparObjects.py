@@ -62,12 +62,11 @@ class Template(CasparObject):
         self.original_height = 0
         self.original_width = 0
         self.original_frame_rate = 0
-        self.components = TypedDict(TypedDict(ComponentProperty)) # A component is just a named collection of properties
+        # A component is just a named collection of properties
+        self.components = TypedDict(TypedDict)
         self.keyframes = []
         self.instances = {}
         self.parameters = TypedDict(TemplateParameter)
-
-        self.retrieve_info()
 
     def retrieve_info(self):
         """
@@ -187,12 +186,14 @@ class TypedDict(dict):
     """
 
     def __init__(self, value_type, *args, **kwargs):
-        if not type(value_type) == type:
+        if isinstance(value_type, TypedDict):
+            value_type = TypedDict
+        elif not isinstance(value_type, types.TypeType):
             raise TypeError("value_type is not a type, got {arg} instead".format(arg=type(value_type)))
 
         self._value_type = value_type
         dict.__init__(self, *args, **kwargs)
-        dict.update(self, *args, **kwargs)
+        self.update(*args, **kwargs)
 
     def get_value_type(self):
         return self._value_type
@@ -205,5 +206,6 @@ class TypedDict(dict):
 
         dict.__setitem__(self, key, value)
 
-
-
+    def update(self, *args, **kwargs):
+        for (k, v) in dict(*args, **kwargs).iteritems():
+            self[k] = v

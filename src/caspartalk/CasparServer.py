@@ -61,8 +61,8 @@ class CasparServer:
         self.server_port = port
         self.socket.connect((self.server_ip, self.server_port))
 
-        self.media = self.get_media_on_server()
-        self.templates = self.get_templates_on_server()
+        #self.media = self.get_media_on_server()
+        #self.templates = self.get_templates_on_server()
 
     def disconnect(self):
         """
