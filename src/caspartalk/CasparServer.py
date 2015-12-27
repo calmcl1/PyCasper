@@ -180,39 +180,7 @@ aspect_ratio = Enum('default', '4:3', '16:9')
 vcodec = Enum('libx264', 'qtrle')
 
 
-# Everything we could have:
-# <log-level>       trace [trace|debug|info|warning|error]</log-level>
-# <channel-grid>    false [true|false]</channel-grid>
-# <mixer>
-#     <blend-modes>          false [true|false]</blend-modes>
-#     <straight-alpha>       false [true|false]</straight-alpha>
-#     <chroma-key>           false [true|false]</chroma-key>
-#     <mipmapping_default_on>false [true|false]</mipmapping_default_on>
-# </mixer>
-# <auto-deinterlace>true  [true|false]</auto-deinterlace>
-# <auto-transcode>  true  [true|false]</auto-transcode>
-# <pipeline-tokens> 2     [1..]       </pipeline-tokens>
-# <template-hosts>
-#     <template-host>
-#         <video-mode/>
-#         <filename/>
-#         <width/>
-#         <height/>
-#     </template-host>
-# </template-hosts>
-# <flash>
-#     <buffer-depth>auto [auto|1..]</buffer-depth>
-# </flash>
-# <thumbnails>
-#     <generate-thumbnails>true [true|false]</generate-thumbnails>
-#     <width>256</width>
-#     <height>144</height>
-#     <video-grid>2</video-grid>
-#     <scan-interval-millis>5000</scan-interval-millis>
-#     <generate-delay-millis>2000</generate-delay-millis>
-#     <video-mode>720p2500</video-mode>
-#     <mipmap>false</mipmap>
-# </thumbnails>
+
 # <channels>
 #     <channel>
 #         <video-mode> PAL [PAL|NTSC|576p2500|720p2398|720p2400|720p2500|720p5000|720p2997|720p5994|720p3000|720p6000|1080p2398|1080p2400|1080i5000|1080i5994|1080i6000|1080p2500|1080p2997|1080p3000|1080p5000|1080p5994|1080p6000|1556p2398|1556p2400|1556p2500|dci1080p2398|dci1080p2400|dci1080p2500|2160p2398|2160p2400|2160p2500|2160p2997|2160p3000|dci2160p2398|dci2160p2400|dci2160p2500] </video-mode>
@@ -460,16 +428,47 @@ vcodec = Enum('libx264', 'qtrle')
 class ServerConfig:
     def __init__(self):
         self.log_level = log_level.trace
-        self.channel_grid = False
-        self.mixer = {} # TODO: Create Mixer info
-        self.auto_deinterlace = True
-        self.auto_transcode = True
-        self.pipeline_tokens = 2
+        self.channel_grid = False # <channel-grid>    false [true|false]</channel-grid>
+
+        # <mixer>
+        self.mixer = {'blend_modes': False,  # <blend-modes>false [true|false]</blend-modes>
+                      'straight_alpha': False,  # <straight-alpha>false [true|false]</straight-alpha>
+                      'chroma_key': False,  # <chroma-key>false [true|false]</chroma-key>
+                      'mipmapping_default_on': False}  # <mipmapping_default_on>false [true|false]</mipmapping_default_on>
+        # </mixer>
+
+        self.auto_deinterlace = True  # <auto-deinterlace>true  [true|false]</auto-deinterlace>
+        self.auto_transcode = True  # <auto-transcode>  true  [true|false]</auto-transcode>
+        self.pipeline_tokens = 2  # <pipeline-tokens> 2     [1..]       </pipeline-tokens>
+
+        # <template-hosts>
+        #     <template-host>
+        #         <video-mode/>
+        #         <filename/>
+        #         <width/>
+        #         <height/>
+        #     </template-host>
+        # </template-hosts>
+
         self.template_hosts = {} # TODO: Create TemplateHost objects
-        self.flash = {} # TODO: Create Flash object
-        self.thumbnails = {} # TODO: Create Thumbnails infp
-        self.channels = [] # TODO: Create channels info
-        self.osc = {} # TODO: Create OSC info
+
+        # <flash>
+        self.flash = {'buffer_depth': 'auto'}  # <buffer-depth>auto [auto|1..]</buffer-depth>
+        # </flash>
+
+        # <thumbnails>
+        self.thumbnails = {'generate_thumbnails': True,  # <generate-thumbnails>true [true|false]</generate-thumbnails>
+                           'width': 256,  # <width>256</width>
+                           'height': 144,  # <height>144</height>
+                           'video_grid': 2,  # <video-grid>2</video-grid>
+                           'scan_interval_millis': 5000,  # <scan-interval-millis>5000</scan-interval-millis>
+                           'generate-delay-millis': 2000,  # <generate-delay-millis>2000</generate-delay-millis>
+                           'video-mode': video_mode.720p2500,  # <video-mode>720p2500</video-mode>
+                           'mipmap': False}  # <mipmap>false</mipmap>
+        # </thumbnails>
+
+        self.channels = [] # TODO: Create Channels object
+        self.osc = {} # TODO: Create OSC object
         self.audio = {} # TODO: Create ChannelAudio object
 
         raise NotImplementedError
