@@ -121,7 +121,6 @@ def parse_500():
 
 def parse_501():
     # 501 [command] FAILED	- Internal server error
-    # FIXME: This should probably be different to a code 500, but the docs are the same...
     raise InternalServerError()
     # return "501 FAILED: Internal server error", False
 
