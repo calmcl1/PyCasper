@@ -148,11 +148,7 @@ class CasparServer:
 
 
 # <log-level>       trace [trace|debug|info|warning|error]</log-level>
-log_level = Enum('trace',
-                 'debug',
-                 'info',
-                 'warning',
-                 'error')
+log_level = Enum('trace', 'debug', 'info', 'warning', 'error')
 
 # <video-mode> PAL [PAL|NTSC|576p2500|720p2398|720p2400|720p2500|720p5000|720p2997|720p5994|720p3000|720p6000|
 # 1080p2398|1080p2400|1080i5000|1080i5994|1080i6000|1080p2500|1080p2997|1080p3000|1080p5000|1080p5994|1080p6000|
@@ -176,62 +172,13 @@ keyer = Enum('external', 'external_separate_device', 'internal', 'default')
 # <aspect-ratio>default [default|4:3|16:9]</aspect-ratio>
 aspect_ratio = Enum('default', '4:3', '16:9')
 
+# <stretch>fill [none|fill|uniform|uniform_to_fill]</stretch>
+stretch = Enum('none', 'fill', 'uniform', 'uniform_to_fill')
+
 # <vcodec>libx264 [libx264|qtrle]</vcodec>
 vcodec = Enum('libx264', 'qtrle')
 
 
-
-# <channels>
-#     <channel>
-#         <video-mode> PAL [PAL|NTSC|576p2500|720p2398|720p2400|720p2500|720p5000|720p2997|720p5994|720p3000|720p6000|1080p2398|1080p2400|1080i5000|1080i5994|1080i6000|1080p2500|1080p2997|1080p3000|1080p5000|1080p5994|1080p6000|1556p2398|1556p2400|1556p2500|dci1080p2398|dci1080p2400|dci1080p2500|2160p2398|2160p2400|2160p2500|2160p2997|2160p3000|dci2160p2398|dci2160p2400|dci2160p2500] </video-mode>
-#         <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
-#         <straight-alpha-output>false [true|false]</straight-alpha-output>
-#         <consumers>
-#             <decklink>
-#                 <device>[1..]</device>
-#                 <key-device>device + 1 [1..]</key-device>
-#                 <embedded-audio>false [true|false]</embedded-audio>
-#                 <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
-#                 <latency>normal [normal|low|default]</latency>
-#                 <keyer>external [external|external_separate_device|internal|default]</keyer>
-#                 <key-only>false [true|false]</key-only>
-#                 <buffer-depth>3 [1..]</buffer-depth>
-#                 <custom-allocator>true [true|false]</custom-allocator>
-#             </decklink>
-#             <bluefish>
-#                 <device>[1..]</device>
-#                 <embedded-audio>false [true|false]</embedded-audio>
-#                 <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
-#                 <key-only>false [true|false]</key-only>
-#             </bluefish>
-#             <system-audio></system-audio>
-#             <screen>
-#                 <device>[0..]</device>
-#                 <aspect-ratio>default [default|4:3|16:9]</aspect-ratio>
-#                 <stretch>fill [none|fill|uniform|uniform_to_fill]</stretch>
-#                 <windowed>false [true|false]</windowed>
-#                 <key-only>false [true|false]</key-only>
-#                 <auto-deinterlace>true [true|false]</auto-deinterlace>
-#                 <vsync>false [true|false]</vsync>
-#                 <name>[Screen Consumer]</name>
-#                 <borderless>false [true|false]</borderless>
-#             </screen>
-#             <newtek-ivga>
-#               <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
-#               <provide-sync>true [true|false]</provide-sync>
-#             </newtek-ivga>
-#             <file>
-#                 <path></path>
-#                 <vcodec>libx264 [libx264|qtrle]</vcodec>
-#                 <separate-key>false [true|false]</separate-key>
-#             </file>
-#             <stream>
-#                 <path></path>
-#                 <args></args>
-#             </stream>
-#         </consumers>
-#     </channel>
-# </channels>
 # <osc>
 #   <default-port>6250</default-port>
 #   <predefined-clients>
@@ -424,11 +371,10 @@ vcodec = Enum('libx264', 'qtrle')
 #   </mix-configs>
 # </audio>
 
-
 class ServerConfig:
     def __init__(self):
         self.log_level = log_level.trace
-        self.channel_grid = False # <channel-grid>    false [true|false]</channel-grid>
+        self.channel_grid = False  # <channel-grid>    false [true|false]</channel-grid>
 
         # <mixer>
         self.mixer = {'blend_modes': False,  # <blend-modes>false [true|false]</blend-modes>
@@ -449,8 +395,9 @@ class ServerConfig:
         #         <height/>
         #     </template-host>
         # </template-hosts>
+        #
 
-        self.template_hosts = {} # TODO: Create TemplateHost objects
+        self.template_hosts = {}  # TODO: Create TemplateHost objects
 
         # <flash>
         self.flash = {'buffer_depth': 'auto'}  # <buffer-depth>auto [auto|1..]</buffer-depth>
@@ -467,8 +414,97 @@ class ServerConfig:
                            'mipmap': False}  # <mipmap>false</mipmap>
         # </thumbnails>
 
-        self.channels = [] # TODO: Create Channels object
-        self.osc = {} # TODO: Create OSC object
-        self.audio = {} # TODO: Create ChannelAudio object
+        self.channels = []  # TODO: Create Channels object
+        self.osc = {}  # TODO: Create OSC object
+        self.audio = {}  # TODO: Create ChannelAudio object
 
         raise NotImplementedError
+
+class Channel:
+    def __init__(self):
+        # <channel>
+        self.video_mode = video_mode.PAL  # <video-mode> PAL [PAL|NTSC|576p2500|720p2398|720p2400|... ]</video-mode>
+        self.channel_layout = channel_layout.stereo  # <channel-layout>stereo [mono|stereo|dts|... ]</channel-layout>
+        self.straight_alpha_output = False  # <straight-alpha-output>false [true|false]</straight-alpha-output>
+        self.consumers = [] # TODO: Create Consumer object
+        # </channel>
+
+
+class Consumer:
+    def __init__(self):
+        pass
+
+class ConsumerDecklink(Consumer):
+    def __init__(self):
+        Consumer.__init__(self)
+
+        # <decklink>
+        self.device = 1  # <device>[1..]</device>
+        self.key_device =self.device + 1  # <key-device>device + 1 [1..]</key-device>
+        self.embedded_audio = False  # <embedded-audio>false [true|false]</embedded-audio>
+        self.channel_layout = channel_layout.stereo
+        self.latency = latency.normal  # <latency>normal [normal|low|default]</latency>
+        self.keyer = keyer.external  # <keyer>external [external|external_separate_device|internal|default]</keyer>
+        self.key_only = False  # <key-only>false [true|false]</key-only>
+        self.buffer_depth = 3  # <buffer-depth>3 [1..]</buffer-depth>
+        self.custom_allocator = True  # <custom-allocator>true [true|false]</custom-allocator>
+        # </decklink>
+
+class ConsumerBluefish(Consumer):
+    def __init__(self):
+        Consumer.__init__(self)
+
+        # <bluefish>
+        self.device = 1  # <device>[1..]</device>
+        self.embedded_audio = False  # <embedded-audio>false [true|false]</embedded-audio>
+        self.channel_layout = channel_layout.stereo  # <channel-layout>stereo [mono|stereo|... ]</channel-layout>
+        self.key_only = False  # <key-only>false [true|false]</key-only>
+        # </bluefish>
+
+class ConsumerSystemAudio(Consumer):
+    def __init__(self):
+        Consumer.__init__(self)
+
+class ConsumerScreen(Consumer):
+    def __init__(self):
+        Consumer.__init__(self)
+
+        # <screen>
+        self.device = 0  # <device>[0..]</device>
+        self.aspect_ratio = aspect_ratio.default  # <aspect-ratio>default [default|4:3|16:9]</aspect-ratio>
+        self.stretch = stretch.fill  # <stretch>fill [none|fill|uniform|uniform_to_fill]</stretch>
+        self.windowed = False  # <windowed>false [true|false]</windowed>
+        self.key_only = False  # <key-only>false [true|false]</key-only>
+        self.auto_deinterlace = True  # <auto-deinterlace>true [true|false]</auto-deinterlace>
+        self.vsync = False  # <vsync>false [true|false]</vsync>
+        self.name = "Screen Consumer"  # <name>[Screen Consumer]</name>
+        self.borderless = False  # <borderless>false [true|false]</borderless>
+        # </screen>
+
+class ConsumerNewtekIVGA(Consumer):
+    def __init__(self):
+        Consumer.__init__()
+
+        # <newtek-ivga>
+        self.channel_layout = channel_layout.stereo  # <channel-layout>stereo [mono|stereo|... ]</channel-layout>
+        self.provide_sync = True  # <provide-sync>true [true|false]</provide-sync>
+        # </newtek-ivga>
+
+class ConsumerFile(Consumer):
+    def __init__(self):
+        Consumer.__init__()
+
+        # <file>
+        self.path = ""  # <path></path>
+        self.vcodec = vcodec.libx264  # <vcodec>libx264 [libx264|qtrle]</vcodec>
+        self.separate_key = False  # <separate-key>false [true|false]</separate-key>
+        # </file>
+
+class ConsumerStream(Consumer):
+    def __init__(self):
+        Consumer.__init__(self)
+
+        # <stream>
+        self.path = ""  # <path></path>
+        self.args = ""  # <args></args>
+        # </stream>
