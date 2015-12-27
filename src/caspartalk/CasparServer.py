@@ -414,7 +414,7 @@ class ServerConfig:
                            'mipmap': False}  # <mipmap>false</mipmap>
         # </thumbnails>
 
-        self.channels = []  # TODO: Create Channels object
+        self.channels = []
         self.osc = {}  # TODO: Create OSC object
         self.audio = {}  # TODO: Create ChannelAudio object
 
