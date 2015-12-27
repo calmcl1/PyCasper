@@ -6,5 +6,5 @@ these commands.
 
 """
 from CasparServer import *
-import AMCP
+import amcp
 import CasparObjects

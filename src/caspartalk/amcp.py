@@ -4,7 +4,7 @@ import StringIO
 import string
 import CasparExceptions
 import CasparObjects
-
+import CasparServer
 
 # Query commands - return info about various things
 
@@ -214,20 +214,23 @@ def info_template(server, template_fn):
 
 def info_config(server):
     """
+    .. warning:: This method has not been implemented in UberCarrot yet!
+
+
     Gets the contents of the configuration used.
 
     :param CasparServer server: The :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
-    :rtype: List
-    :return: A list containing information about the configuration of the server.
+    :rtype: :py:class:`caspartalk.CasparServer.ServerConfig`
+    :return: A ServerConfig containing information about the configuration of the server.
     """
     # INFO CONFIG
+    # TODO: Implement info_config command
+
+    raise NotImplementedError
 
     amcp_string = "INFO CONFIG"
-
     response = server.send_amcp_command(amcp_string)
     response = StringIO.StringIO(string.join(response, ""))
-
-    config = {}
 
     for event, elem in cET.iterparse(response):
 
