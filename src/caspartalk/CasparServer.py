@@ -161,6 +161,7 @@ video_mode = Enum('PAL', 'NTSC', '576p2500', '720p2398', '720p2400', '720p2500',
                   '2160p2997', '2160p3000', 'dci2160p2398', 'dci2160p2400', 'dci2160p2500')
 
 # <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
+# A list of all the AudioChannelLayouts
 channel_layout = Enum('mono', 'stereo', 'dts', 'dolbye', 'dolbydigital', 'smpte', 'passthru')
 
 # <latency>normal [normal|low|default]</latency>
@@ -178,189 +179,6 @@ stretch = Enum('none', 'fill', 'uniform', 'uniform_to_fill')
 # <vcodec>libx264 [libx264|qtrle]</vcodec>
 vcodec = Enum('libx264', 'qtrle')
 
-
-# <audio>
-#   <channel-layouts>
-#     <channel-layout>
-#       <name>mono</name>
-#       <type>1.0</type>
-#       <num-channels>1</num-channels>
-#       <channels>C</channels>
-#     </channel-layout>
-#     <channel-layout>
-#       <name>stereo</name>
-#       <type>2.0</type>
-#       <num-channels>2</num-channels>
-#       <channels>L R</channels>
-#     </channel-layout>
-#     <channel-layout>
-#       <name>dts</name>
-#       <type>5.1</type>
-#       <num-channels>6</num-channels>
-#       <channels>C L R Ls Rs LFE</channels>
-#     </channel-layout>
-#     <channel-layout>
-#       <name>dolbye</name>
-#       <type>5.1+stereomix</type>
-#       <num-channels>8</num-channels>
-#       <channels>L R C LFE Ls Rs Lmix Rmix</channels>
-#     </channel-layout>
-#     <channel-layout>
-#       <name>dolbydigital</name>
-#       <type>5.1</type>
-#       <num-channels>6</num-channels>
-#       <channels>L C R Ls Rs LFE</channels>
-#     </channel-layout>
-#     <channel-layout>
-#       <name>smpte</name>
-#       <type>5.1</type>
-#       <num-channels>6</num-channels>
-#       <channels>L R C LFE Ls Rs</channels>
-#     </channel-layout>
-#     <channel-layout>
-#       <name>passthru</name>
-#       <type>16ch</type>
-#       <num-channels>16</num-channels>
-#       <channels />
-#     </channel-layout>
-#   </channel-layouts>
-#   <mix-configs>
-#     <mix-config>
-#       <from>1.0</from>
-#       <to>2.0</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>C L 1.0</mapping>
-#         <mapping>C R 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>1.0</from>
-#       <to>5.1</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>C L 1.0</mapping>
-#         <mapping>C R 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>1.0</from>
-#       <to>5.1+stereomix</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>C L    1.0</mapping>
-#         <mapping>C R    1.0</mapping>
-#         <mapping>C Lmix 1.0</mapping>
-#         <mapping>C Rmix 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>2.0</from>
-#       <to>1.0</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>L C 1.0</mapping>
-#         <mapping>R C 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>2.0</from>
-#       <to>5.1</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>L L 1.0</mapping>
-#         <mapping>R R 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>2.0</from>
-#       <to>5.1+stereomix</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>L L    1.0</mapping>
-#         <mapping>R R    1.0</mapping>
-#         <mapping>L Lmix 1.0</mapping>
-#         <mapping>R Rmix 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>5.1</from>
-#       <to>1.0</to>
-#       <mix>average</mix>
-#       <mappings>
-#         <mapping>L  C 1.0</mapping>
-#         <mapping>R  C 1.0</mapping>
-#         <mapping>C  C 0.707</mapping>
-#         <mapping>Ls C 0.707</mapping>
-#         <mapping>Rs C 0.707</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>5.1</from>
-#       <to>2.0</to>
-#       <mix>average</mix>
-#       <mappings>
-#         <mapping>L  L 1.0</mapping>
-#         <mapping>R  R 1.0</mapping>
-#         <mapping>C  L 0.707</mapping>
-#         <mapping>C  R 0.707</mapping>
-#         <mapping>Ls L 0.707</mapping>
-#         <mapping>Rs R 0.707</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>5.1</from>
-#       <to>5.1+stereomix</to>
-#       <mix>average</mix>
-#       <mappings>
-#         <mapping>L   L   1.0</mapping>
-#         <mapping>R   R   1.0</mapping>
-#         <mapping>C   C   1.0</mapping>
-#         <mapping>Ls  Ls  1.0</mapping>
-#         <mapping>Rs  Rs  1.0</mapping>
-#         <mapping>LFE LFE 1.0</mapping>
-#
-#         <mapping>L  Lmix 1.0</mapping>
-#         <mapping>R  Rmix 1.0</mapping>
-#         <mapping>C  Lmix 0.707</mapping>
-#         <mapping>C  Rmix 0.707</mapping>
-#         <mapping>Ls Lmix 0.707</mapping>
-#         <mapping>Rs Rmix 0.707</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>5.1+stereomix</from>
-#       <to>1.0</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>Lmix C 1.0</mapping>
-#         <mapping>Rmix C 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>5.1+stereomix</from>
-#       <to>2.0</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>Lmix L 1.0</mapping>
-#         <mapping>Rmix R 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#     <mix-config>
-#       <from>5.1+stereomix</from>
-#       <to>5.1</to>
-#       <mix>add</mix>
-#       <mappings>
-#         <mapping>L   L   1.0</mapping>
-#         <mapping>R   R   1.0</mapping>
-#         <mapping>C   C   1.0</mapping>
-#         <mapping>Ls  Ls  1.0</mapping>
-#         <mapping>Rs  Rs  1.0</mapping>
-#         <mapping>LFE LFE 1.0</mapping>
-#       </mappings>
-#     </mix-config>
-#   </mix-configs>
-# </audio>
 
 class ServerConfig:
     def __init__(self):
@@ -407,7 +225,7 @@ class ServerConfig:
 
         self.channels = []
         self.osc = {}
-        self.audio = {}  # TODO: Create ChannelAudio object
+        self.audio_configs = {}  # TODO: Create AudioConfigs object
 
         raise NotImplementedError
 
@@ -518,5 +336,83 @@ class OSC:
             self.default_port = default_port
         elif default_port:
             # default_port is supplied, but is not an int
-            raise TypeError("Expected int for default_port, got {wrong_t}").__format__(wrong_t=type(default_port))
+            raise TypeError("Expected int for default_port, got {wrong_t}".format(wrong_t=type(default_port)))
 
+
+class AudioConfigs:
+    def __init__(self):
+        self.channel_layouts = {AudioChannelLayout("mono", "1.0", 1, "C"),
+                                AudioChannelLayout("stereo", "2.0", 2, "L R"),
+                                AudioChannelLayout("dts", "5.1", 6, "C L R Ls Rs LFE"),
+                                AudioChannelLayout("dolbye", "5.1+stereomix", 8, "L R C LFE Ls Rs Lmix Rmix"),
+                                AudioChannelLayout("dolbydigital", "5.1", 6, "L C R Ls Rs LFE"),
+                                AudioChannelLayout("smpte", "5.1", 6, "L R C LFE Ls Rs"),
+                                AudioChannelLayout("passthru", "16ch", 16)}
+        self.mix_configs = [AudioMixConfig("1.0", "2.0", "add", ("C L 1.0", "C R 1.0")),
+                            AudioMixConfig("1.0", "5.1", "add", ("C L 1.0", "C R 1.0")),
+                            AudioMixConfig("1.0", "5.1+stereomix", "add", ("C L 1.0",
+                                                                           "C R 1.0",
+                                                                           "C Lmix 1.0",
+                                                                           "C Rmix 1.0")),
+                            AudioMixConfig("2.0", "1.0", "add", ("L C 1.0", "R C 1.0")),
+                            AudioMixConfig("2.0", "5.1", "add", ("L L 1.0", "R R 1.0")),
+                            AudioMixConfig("2.0", "5.1+stereomix", "add", ("L L 1.0",
+                                                                           "R R 1.0",
+                                                                           "L Lmix 1.0",
+                                                                           "R RMix 1.0")),
+                            AudioMixConfig("5.1", "1.0", "average", ("L C 1.0",
+                                                                     "R C 1.0",
+                                                                     "C C 0.707",
+                                                                     "Ls C 0.707",
+                                                                     "Rs C 0.707")),
+                            AudioMixConfig("5.1", "2.0", "average", ("L L 1.0",
+                                                                     "R R 1.0",
+                                                                     "C L 0.707",
+                                                                     "C R 0.707",
+                                                                     "Ls L 0.707",
+                                                                     "Rs R 0.707")),
+                            AudioMixConfig("5.1", "5.1+stereomix", "average", ("L L 1.0",
+                                                                               "R R 1.0",
+                                                                               "C C 1.0",
+                                                                               "Ls Ls 1.0",
+                                                                               "Rs Rs 1.0",
+                                                                               "LFE LFE 1.0",
+                                                                               "L Lmix 1.0",
+                                                                               "R Rmix 1.0",
+                                                                               "C Lmix 0.707",
+                                                                               "C Rmix 0.707",
+                                                                               "Ls Lmix 0.707",
+                                                                               "Rs Rmix 0.707")),
+                            AudioMixConfig("5.1+stereomix", "1.0", "add", ("Lmix C 1.0",
+                                                                           "Rmix C 1.0")),
+                            AudioMixConfig("5.1+stereomix", "2.0", "add", ("Lmix L 1.0",
+                                                                           "Rmix R 1.0")),
+                            AudioMixConfig("5.1+stereomix", "5.1", "add", ("L L 1.0",
+                                                                           "R R 1.0",
+                                                                           "C C 1.0",
+                                                                           "Ls Ls 1.0",
+                                                                           "Rs Rs 1.0",
+                                                                           "LFE LFE 1.0"))
+                            ]
+
+
+class AudioChannelLayout:
+    def __init__(self, name, type, num_channels, channels=""):
+        # <channel-layout>
+        self.name = name  # <name>mono</name>
+        self.type = type  # <type>1.0</type>
+        self.num_channels = num_channels  # <num-channels>1</num-channels>
+        self.channels = channels  # <channels>C</channels> Can be None - see 'passthru'
+        # </channel-layout>
+
+
+class AudioMixConfig:
+    def __init__(self, from_, to, mix, mappings):
+        self.from_ = from_
+        self.to = to
+        self.mix = mix
+        self.mappings = None
+        if isinstance(mappings, tuple):
+            self.mappings = mappings
+        else:
+            raise TypeError("Expected int for default_port, got {wrong_t}".format(wrong_t=type(mappings)))
