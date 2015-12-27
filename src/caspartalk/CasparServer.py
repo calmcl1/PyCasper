@@ -225,9 +225,7 @@ class ServerConfig:
 
         self.channels = []
         self.osc = {}
-        self.audio_configs = {}  # TODO: Create AudioConfigs object
-
-        raise NotImplementedError
+        self.audio_configs = {}
 
 
 class Channel:
@@ -339,7 +337,7 @@ class OSC:
             raise TypeError("Expected int for default_port, got {wrong_t}".format(wrong_t=type(default_port)))
 
 
-class AudioConfigs:
+class AudioConfig:
     def __init__(self):
         self.channel_layouts = {AudioChannelLayout("mono", "1.0", 1, "C"),
                                 AudioChannelLayout("stereo", "2.0", 2, "L R"),
@@ -397,10 +395,10 @@ class AudioConfigs:
 
 
 class AudioChannelLayout:
-    def __init__(self, name, type, num_channels, channels=""):
+    def __init__(self, name, type_, num_channels, channels=""):
         # <channel-layout>
         self.name = name  # <name>mono</name>
-        self.type = type  # <type>1.0</type>
+        self.type = type_  # <type>1.0</type>
         self.num_channels = num_channels  # <num-channels>1</num-channels>
         self.channels = channels  # <channels>C</channels> Can be None - see 'passthru'
         # </channel-layout>
