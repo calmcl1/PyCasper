@@ -1,5 +1,5 @@
 import socket
-import amcp
+import AMCP
 import ResponseInterpreter
 from enum import Enum
 
@@ -20,7 +20,7 @@ class CasparServer:
     Example:
 
         >>> my_caspar_server = CasparServer("192.168.1.50", 5250)
-        >>> amcp.cg_info(my_casper_server) # Or whatever, etc...
+        >>> AMCP.cg_info(my_casper_server) # Or whatever, etc...
 
     If the *server_ip* parameter is given, the method will also call :py:meth:`~caspartalk.CasparServer.connect`, also \
     using the *port* if provided.
@@ -137,10 +137,10 @@ class CasparServer:
         raise NotImplementedError
 
     def get_templates_on_server(self):
-        template_fn_list = amcp.tls(self)
+        template_fn_list = AMCP.tls(self)
         template_list = []
         for t in template_fn_list:
-            tmpl = amcp.info_template(self, t)
+            tmpl = AMCP.info_template(self, t)
             if tmpl:
                 template_list.append(tmpl)
 

@@ -1,6 +1,6 @@
 import types
 import collections
-import amcp
+import AMCP
 
 CasparTypes = {"string": types.StringType,
                "int": types.IntType}
