@@ -426,7 +426,7 @@ class Channel:
         self.video_mode = video_mode.PAL  # <video-mode> PAL [PAL|NTSC|576p2500|720p2398|720p2400|... ]</video-mode>
         self.channel_layout = channel_layout.stereo  # <channel-layout>stereo [mono|stereo|dts|... ]</channel-layout>
         self.straight_alpha_output = False  # <straight-alpha-output>false [true|false]</straight-alpha-output>
-        self.consumers = [] # TODO: Create Consumer object
+        self.consumers = []
         # </channel>
 
 
