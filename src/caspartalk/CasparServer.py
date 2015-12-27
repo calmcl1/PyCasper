@@ -179,15 +179,6 @@ stretch = Enum('none', 'fill', 'uniform', 'uniform_to_fill')
 vcodec = Enum('libx264', 'qtrle')
 
 
-# <osc>
-#   <default-port>6250</default-port>
-#   <predefined-clients>
-#     <predefined-client>
-#       <address>127.0.0.1</address>
-#       <port>5253</port>
-#     </predefined-client>
-#   </predefined-clients>
-# </osc>
 # <audio>
 #   <channel-layouts>
 #     <channel-layout>
@@ -415,10 +406,11 @@ class ServerConfig:
         # </thumbnails>
 
         self.channels = []
-        self.osc = {}  # TODO: Create OSC object
+        self.osc = {}
         self.audio = {}  # TODO: Create ChannelAudio object
 
         raise NotImplementedError
+
 
 class Channel:
     def __init__(self):
@@ -434,13 +426,14 @@ class Consumer:
     def __init__(self):
         pass
 
+
 class ConsumerDecklink(Consumer):
     def __init__(self):
         Consumer.__init__(self)
 
         # <decklink>
         self.device = 1  # <device>[1..]</device>
-        self.key_device =self.device + 1  # <key-device>device + 1 [1..]</key-device>
+        self.key_device = self.device + 1  # <key-device>device + 1 [1..]</key-device>
         self.embedded_audio = False  # <embedded-audio>false [true|false]</embedded-audio>
         self.channel_layout = channel_layout.stereo
         self.latency = latency.normal  # <latency>normal [normal|low|default]</latency>
@@ -449,6 +442,7 @@ class ConsumerDecklink(Consumer):
         self.buffer_depth = 3  # <buffer-depth>3 [1..]</buffer-depth>
         self.custom_allocator = True  # <custom-allocator>true [true|false]</custom-allocator>
         # </decklink>
+
 
 class ConsumerBluefish(Consumer):
     def __init__(self):
@@ -461,9 +455,11 @@ class ConsumerBluefish(Consumer):
         self.key_only = False  # <key-only>false [true|false]</key-only>
         # </bluefish>
 
+
 class ConsumerSystemAudio(Consumer):
     def __init__(self):
         Consumer.__init__(self)
+
 
 class ConsumerScreen(Consumer):
     def __init__(self):
@@ -481,6 +477,7 @@ class ConsumerScreen(Consumer):
         self.borderless = False  # <borderless>false [true|false]</borderless>
         # </screen>
 
+
 class ConsumerNewtekIVGA(Consumer):
     def __init__(self):
         Consumer.__init__()
@@ -489,6 +486,7 @@ class ConsumerNewtekIVGA(Consumer):
         self.channel_layout = channel_layout.stereo  # <channel-layout>stereo [mono|stereo|... ]</channel-layout>
         self.provide_sync = True  # <provide-sync>true [true|false]</provide-sync>
         # </newtek-ivga>
+
 
 class ConsumerFile(Consumer):
     def __init__(self):
@@ -500,6 +498,7 @@ class ConsumerFile(Consumer):
         self.separate_key = False  # <separate-key>false [true|false]</separate-key>
         # </file>
 
+
 class ConsumerStream(Consumer):
     def __init__(self):
         Consumer.__init__(self)
@@ -508,3 +507,16 @@ class ConsumerStream(Consumer):
         self.path = ""  # <path></path>
         self.args = ""  # <args></args>
         # </stream>
+
+
+class OSC:
+    def __init__(self, default_port=None):
+        self.default_port = 6250
+        self.predefined_clients = {}  # {"address" : port, ...}
+
+        if isinstance(default_port, int):
+            self.default_port = default_port
+        elif default_port:
+            # default_port is supplied, but is not an int
+            raise TypeError("Expected int for default_port, got {wrong_t}").__format__(wrong_t=type(default_port))
+
