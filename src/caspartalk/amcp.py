@@ -1,5 +1,5 @@
 import json
-import xml.etree.cElementTree as CET
+import xml.etree.cElementTree as cET
 import StringIO
 import string
 import CasparExceptions
@@ -7,6 +7,7 @@ import CasparObjects
 
 
 # Query commands - return info about various things
+
 
 def tls(server):
     """
@@ -93,36 +94,120 @@ def info(server, channel=None, layer=None):
         return None
 
 
-def info_template(server, template):
+def info_template(server, template_fn):
     """
     .. warning:: This method has not been implemented in UberCarrot yet!
 
     Gets information about the specified template.
 
     :param CasparServer server: The :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
-    :param str template: The name (including path relative to the CasparCG template directory) of the template \
+    :param str template_fn: The name (including path relative to the CasparCG template directory) of the template \
     to query.
-    :rtype: List
-    :return: A list containing information on the queried template.
+    :rtype: :py:class:`~caspartalk.CasparObjects.Template`
+    :return: A Template populated with the correct data.
     """
     # INFO TEMPLATE [template:string]
 
-    # TODO: implement INFO TEMPLATE command - though this can't really be done until CCG 2.1 is released
+    if not isinstance(template_fn, str):
+        raise TypeError("Expected string for template, got {0}".format(type(template_fn)))
 
-    if not isinstance(template, (str, CasparObjects.Template)):
-        raise TypeError("Expected string or CasparObjects.Template for template, got {0}".format(type(template)))
+    amcp_string = "INFO TEMPLATE {template}".format(template=template_fn)
 
-    amcp_string = "INFO TEMPLATE {template}".format(template=template)
+    try:
+        response = server.send_amcp_command(amcp_string)
+    except CasparExceptions.IllegalParameterError:
+        print "Cannot find template data for", template_fn
+        return None
+    # for r in response:
+    #    print r
 
-    response = server.send_amcp_command(amcp_string)
-    for r in response:
-        print r
+    template = CasparObjects.Template(server, template_fn)
 
-    template = CasparObjects.Template(template)
+    el_template = cET.fromstringlist(response)
 
-    template.owner_server = server
+    print "Template:", template_fn
 
-    raise NotImplementedError
+    if el_template.tag != "template":
+        print "No Template found!"
+        return None
+
+    if el_template.attrib:
+        print el_template.attrib.keys()
+
+        # Find the basic information about the Template
+        if "version" in el_template.attrib.keys():
+            template.version = el_template.attrib["version"]
+        if "authorName" in el_template.attrib.keys():
+            template.author_name = el_template.attrib["authorName"]
+        if "authorEmail" in el_template.attrib.keys():
+            template.author_email = el_template.attrib["authorEmail"]
+        if "templateInfo" in el_template.attrib.keys():
+            template.template_info = el_template.attrib["templateInfo"]
+        if "originalWidth" in el_template.attrib.keys():
+            template.original_width = el_template.attrib["originalWidth"]
+        if "originalHeight" in el_template.attrib.keys():
+            template.original_height = el_template.attrib["originalHeight"]
+        if "originalFrameRate" in el_template.attrib.keys():
+            template.original_frame_rate = el_template.attrib["originalFrameRate"]
+
+    # Find all the components and their properties, then add these to the Template
+    el_components = el_template.find("components").findall("component")
+    if el_components is not None and len(list(el_components)):
+        for comp in list(el_components):
+            print "\tFound component", comp.attrib["name"]
+            el_comp_properties = comp.findall("property")
+            prop_id = prop_type = prop_info = None
+            for prop in el_comp_properties:
+                prop_id = prop.attrib["name"]
+                print "\t\tID:", prop_id
+                prop_type = prop.attrib["type"]
+                print "\t\tType:", prop_type
+                prop_info = prop.attrib["info"]
+                print "\t\tInfo:", prop_info
+            comp_prop = CasparObjects.ComponentProperty(prop_id, prop_type, prop_info)
+            template.components[comp.attrib["name"]] = CasparObjects.TypedDict(CasparObjects.ComponentProperty)
+            template.components[comp.attrib["name"]][prop_id] = comp_prop
+    else:
+        print "\tNo components found"
+
+    # Find all the keyframes and add them to the Template
+    el_keyframes = el_template.find("keyframes")
+    if el_keyframes is not None and len(list(el_keyframes)):
+        for kf in list(el_keyframes):
+            print "\tFound keyframe:", kf.attrib["name"]
+            template.keyframes.append(kf.attrib["name"])
+    else:
+        print "\tNo keyframes found"
+
+    # Find all the instances and add them to the Template
+    el_instances = el_template.find("instances")
+    if el_instances is not None and len(list(el_instances)):
+        for inst in list(el_instances):
+            print "\tFound instance", inst.attrib["name"]
+            print "\t\tType:", inst.attrib["type"]
+            if template.components[inst.attrib["type"]]:
+                print "\t\tGood reference"
+                template.instances[inst.attrib["name"]] = inst.attrib["type"]
+            else: print "Bad reference to", inst.attrib["type"]
+    else:
+        print "\tNo instances found"
+
+    # Find all the parameters and add them to the Template
+
+    el_parameters = el_template.find("parameters")
+    if el_parameters is not None:
+        for param in list(el_parameters):
+            param_id = param_type = param_info = None
+            param_id = param.attrib["id"]
+            print "\tFound parameter:", param_id
+            param_type = param.attrib["type"]
+            print "\t\tType:", param_type
+            param_info = param.attrib["info"]
+            print "\t\tInfo:", param_info
+            temp_param = CasparObjects.TemplateParameter(param_id, param_type, param_info)
+            template.parameters[param_id] = temp_param
+    else:
+        print "\tNo parameters found"
 
     return template
 
@@ -144,7 +229,7 @@ def info_config(server):
 
     config = {}
 
-    for event, elem in CET.iterparse(response):
+    for event, elem in cET.iterparse(response):
 
         if "path" in elem.tag:
             print "Skipping <paths> - use INFO PATHS instead"
@@ -186,7 +271,7 @@ def info_paths(server):
     paths = {}
     response = StringIO.StringIO(string.join(response, ""))
 
-    for event, elem in CET.iterparse(response):
+    for event, elem in cET.iterparse(response):
         if "-path" in elem.tag:
             # Huzzah, we've found a path!
             print "Found", elem.tag, elem.text

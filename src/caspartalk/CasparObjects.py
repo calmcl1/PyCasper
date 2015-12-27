@@ -1,5 +1,6 @@
-import AMCP
 import types
+import collections
+import AMCP
 
 CasparTypes = {"string": types.StringType,
                "int": types.IntType}
@@ -107,10 +108,10 @@ class TemplateParameter(object):
             self._value = param_value
         else:
             raise TypeError(
-                "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=param_value,
-                                                                                                 correct_type=expected_type,
-                                                                                                 wrong_type=type(
-                                                                                                     param_value)))
+                    "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=param_value,
+                                                                                                     correct_type=expected_type,
+                                                                                                     wrong_type=type(
+                                                                                                             param_value)))
 
     def get_value(self):
         return self._value
@@ -154,10 +155,10 @@ class ComponentProperty(object):
             self._value = data_value
         else:
             raise TypeError(
-                "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=data_value,
-                                                                                                 correct_type=expected_type,
-                                                                                                 wrong_type=type(
-                                                                                                     data_value)))
+                    "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=data_value,
+                                                                                                     correct_type=expected_type,
+                                                                                                     wrong_type=type(
+                                                                                                             data_value)))
 
     def get_value(self):
         return self._value
@@ -168,7 +169,7 @@ class ComponentProperty(object):
         return str(type(self).__name__)
 
 
-class TypedDict(dict):
+class TypedDict(collections.MutableMapping):
     """
     A TypedDict is what it sounds like - a normal Dict, but with the setter overridden so that the key is as normal,
     just a string, but the value is checked to make sure that it is a certain type before it is added to the Dict,
@@ -178,26 +179,35 @@ class TypedDict(dict):
     """
 
     def __init__(self, value_type, *args, **kwargs):
+        self.store = dict()
+        # dict.__init__(dict(), *args, **kwargs)
+        self.store.update(*args, **kwargs)
+
         if isinstance(value_type, TypedDict):
             value_type = TypedDict
         elif not isinstance(value_type, types.TypeType):
             raise TypeError("value_type is not a type, got {arg} instead".format(arg=type(value_type)))
 
         self._value_type = value_type
-        dict.__init__(self, *args, **kwargs)
-        self.update(*args, **kwargs)
+
+    def __getitem__(self, key):
+        return self.store[key]
+
+    def __setitem__(self, key, value):
+        if not isinstance(value, self.value_type):
+            raise TypeError("{value} is not a {type}.".format(value=value, type=self.value_type))
+        self.store[key] = value
+
+    def __delitem__(self, key):
+        del self.store[key]
+
+    def __iter__(self):
+        return iter(self.store)
+
+    def __len__(self):
+        return len(self.store)
 
     def get_value_type(self):
         return self._value_type
 
     value_type = property(get_value_type)
-
-    def __setitem__(self, key, value):
-        if not isinstance(value, self.value_type):
-            raise TypeError("{value} is not a {type}.".format(value=value, type=self.value_type))
-
-        dict.__setitem__(self, key, value)
-
-    def update(self, *args, **kwargs):
-        for (k, v) in dict(*args, **kwargs).iteritems():
-            self[k] = v
