@@ -233,12 +233,28 @@ class ServerConfig:
 
 
 class Channel:
-    def __init__(self):
+    def __init__(self, ch_video_mode=video_mode.PAL, ch_channel_layout=channel_layout.stereo,
+                 ch_straight_alpha_output=False,
+                 ch_consumers=[]):
         # <channel>
-        self.video_mode = video_mode.PAL  # <video-mode> PAL [PAL|NTSC|576p2500|720p2398|720p2400|... ]</video-mode>
-        self.channel_layout = channel_layout.stereo  # <channel-layout>stereo [mono|stereo|dts|... ]</channel-layout>
-        self.straight_alpha_output = False  # <straight-alpha-output>false [true|false]</straight-alpha-output>
-        self.consumers = []
+        if ch_video_mode not in video_mode:
+            raise ValueError(
+                    "{mode} is not a valid video mode:\r\n{modes}".format(mode=str(ch_video_mode),
+                                                                          modes=list(video_mode)))
+        self.video_mode = ch_video_mode
+
+        if ch_channel_layout not in channel_layout:
+            raise ValueError("{ch_lo} is not a valid channel layout:\r\n{los}".format(ch_lo=str(ch_channel_layout),
+                                                                                      los=list(channel_layout)))
+        self.channel_layout = ch_channel_layout
+
+        if not isinstance(ch_straight_alpha_output, bool):
+            raise ValueError(
+                    "Expected a boolean for ch_straight_alpha_output, got {t}".format(t=type(ch_straight_alpha_output)))
+
+        if not isinstance(ch_consumers, (list, tuple)):
+            raise ValueError("Expected a list of Consumers for ch_consumers, got {t}".format(t=type(ch_consumers)))
+        self.consumers = ch_consumers
         # </channel>
 
 
@@ -372,7 +388,7 @@ class AudioConfig:
                                                                      "R R 1.0",
                                                                      "C L 0.707",
                                                                      "C R 0.707",
-                                                                           "L Lmix 1.0",
+                                                                     "L Lmix 1.0",
                                                                      "Ls L 0.707",
                                                                      "Rs R 0.707")),
                             AudioMixConfig("5.1", "5.1+stereomix", "average", ("L L 1.0",
