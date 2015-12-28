@@ -3,7 +3,9 @@ import collections
 import AMCP
 
 CasparTypes = {"string": types.StringType,
-               "int": types.IntType}
+               "int": types.IntType,
+               "number": types.FloatType,
+               "boolean": types.BooleanType}
 
 
 class CasparObject(object):

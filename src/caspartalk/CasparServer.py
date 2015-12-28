@@ -182,6 +182,8 @@ vcodec = Enum('libx264', 'qtrle')
 
 class ServerConfig:
     def __init__(self):
+        # This is set up with the default values from the config.
+        # Upon initialization, we'll populate these with any values that have been manually overridden.
         self.log_level = log_level.trace
         self.channel_grid = False  # <channel-grid>    false [true|false]</channel-grid>
 
