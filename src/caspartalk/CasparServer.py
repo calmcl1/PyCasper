@@ -27,6 +27,8 @@ class CasparServer:
 
     """
 
+    # TODO: Add some sort of heartbeat to show that the connection is still alive?
+
     def __init__(self, server_ip=None, port=5250):
         # Set up a connection a socket to connect with
         self.server_ip = self.server_port = None
@@ -349,6 +351,7 @@ class AudioConfig:
                                 AudioChannelLayout("smpte", "5.1", 6, "L R C LFE Ls Rs"),
                                 AudioChannelLayout("passthru", "16ch", 16)
                                 }
+
         self.mix_configs = [AudioMixConfig("1.0", "2.0", "add", ("C L 1.0", "C R 1.0")),
                             AudioMixConfig("1.0", "5.1", "add", ("C L 1.0", "C R 1.0")),
                             AudioMixConfig("1.0", "5.1+stereomix", "add", ("C L 1.0",
@@ -359,7 +362,6 @@ class AudioConfig:
                             AudioMixConfig("2.0", "5.1", "add", ("L L 1.0", "R R 1.0")),
                             AudioMixConfig("2.0", "5.1+stereomix", "add", ("L L 1.0",
                                                                            "R R 1.0",
-                                                                           "L Lmix 1.0",
                                                                            "R RMix 1.0")),
                             AudioMixConfig("5.1", "1.0", "average", ("L C 1.0",
                                                                      "R C 1.0",
@@ -370,6 +372,7 @@ class AudioConfig:
                                                                      "R R 1.0",
                                                                      "C L 0.707",
                                                                      "C R 0.707",
+                                                                           "L Lmix 1.0",
                                                                      "Ls L 0.707",
                                                                      "Rs R 0.707")),
                             AudioMixConfig("5.1", "5.1+stereomix", "average", ("L L 1.0",
