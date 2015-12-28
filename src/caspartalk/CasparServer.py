@@ -347,7 +347,8 @@ class AudioConfig:
                                 AudioChannelLayout("dolbye", "5.1+stereomix", 8, "L R C LFE Ls Rs Lmix Rmix"),
                                 AudioChannelLayout("dolbydigital", "5.1", 6, "L C R Ls Rs LFE"),
                                 AudioChannelLayout("smpte", "5.1", 6, "L R C LFE Ls Rs"),
-                                AudioChannelLayout("passthru", "16ch", 16)}
+                                AudioChannelLayout("passthru", "16ch", 16)
+                                }
         self.mix_configs = [AudioMixConfig("1.0", "2.0", "add", ("C L 1.0", "C R 1.0")),
                             AudioMixConfig("1.0", "5.1", "add", ("C L 1.0", "C R 1.0")),
                             AudioMixConfig("1.0", "5.1+stereomix", "add", ("C L 1.0",
