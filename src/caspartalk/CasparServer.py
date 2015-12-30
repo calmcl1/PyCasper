@@ -156,11 +156,16 @@ log_level = Enum('trace', 'debug', 'info', 'warning', 'error')
 # 1080p2398|1080p2400|1080i5000|1080i5994|1080i6000|1080p2500|1080p2997|1080p3000|1080p5000|1080p5994|1080p6000|
 # 1556p2398|1556p2400|1556p2500|dci1080p2398|dci1080p2400|dci1080p2500|2160p2398|2160p2400|2160p2500|2160p2997|
 # 2160p3000|dci2160p2398|dci2160p2400|dci2160p2500] </video-mode>
-video_mode = Enum('PAL', 'NTSC', '576p2500', '720p2398', '720p2400', '720p2500', '720p5000', '720p2997', '720p5994',
-                  '720p3000', '720p6000', '1080p2398', '1080p2400', '1080i5000', '1080i5994', '1080i6000', '1080p2500',
-                  '1080p2997', '1080p3000', '1080p5000', '1080p5994', '1080p6000', '1556p2398', '1556p2400',
-                  '1556p2500', 'dci1080p2398', 'dci1080p2400', 'dci1080p2500', '2160p2398', '2160p2400', '2160p2500',
-                  '2160p2997', '2160p3000', 'dci2160p2398', 'dci2160p2400', 'dci2160p2500')
+# Annoyingly, attributes can't start with integers, so every mode has been prefixed with 'vm_'.
+video_mode = Enum('vm_PAL', 'vm_NTSC', 'vm_576p2500', 'vm_720p2398', 'vm_720p2400', 'vm_720p2500', 'vm_720p5000',
+                  'vm_720p2997', 'vm_720p5994',
+                  'vm_720p3000', 'vm_720p6000', 'vm_1080p2398', 'vm_1080p2400', 'vm_1080i5000', 'vm_1080i5994',
+                  'vm_1080i6000', 'vm_1080p2500',
+                  'vm_1080p2997', 'vm_1080p3000', 'vm_1080p5000', 'vm_1080p5994', 'vm_1080p6000', 'vm_1556p2398',
+                  'vm_1556p2400',
+                  'vm_1556p2500', 'vm_dci1080p2398', 'vm_dci1080p2400', 'vm_dci1080p2500', 'vm_2160p2398',
+                  'vm_2160p2400', 'vm_2160p2500',
+                  'vm_2160p2997', 'vm_2160p3000', 'vm_dci2160p2398', 'vm_dci2160p2400', 'vm_dci2160p2500')
 
 # <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
 # A list of all the AudioChannelLayouts
@@ -186,6 +191,8 @@ class ServerConfig:
     def __init__(self):
         # This is set up with the default values from the config.
         # Upon initialization, we'll populate these with any values that have been manually overridden.
+        # TODO: Add 'controllers' node
+
         self.log_level = log_level.trace
         self.channel_grid = False  # <channel-grid>    false [true|false]</channel-grid>
 
@@ -223,7 +230,7 @@ class ServerConfig:
                            'video_grid': 2,  # <video-grid>2</video-grid>
                            'scan_interval_millis': 5000,  # <scan-interval-millis>5000</scan-interval-millis>
                            'generate-delay-millis': 2000,  # <generate-delay-millis>2000</generate-delay-millis>
-                           'video-mode': video_mode.720p2500,  # <video-mode>720p2500</video-mode>
+                           'video-mode': video_mode.vm_720p2500,  # <video-mode>720p2500</video-mode>
                            'mipmap': False}  # <mipmap>false</mipmap>
         # </thumbnails>
 
@@ -233,7 +240,7 @@ class ServerConfig:
 
 
 class Channel:
-    def __init__(self, ch_video_mode=video_mode.PAL, ch_channel_layout=channel_layout.stereo,
+    def __init__(self, ch_video_mode=video_mode.vm_PAL, ch_channel_layout=channel_layout.stereo,
                  ch_straight_alpha_output=False,
                  ch_consumers=[]):
         # <channel>
