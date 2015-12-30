@@ -19,3 +19,6 @@ Acts as an interface to CasperCG, provides a graphics operator the ability to fi
         * When the number is keyed in (numpad only?), the graphic + content is recalled together, pre-filled
         * **Let's be honest, we're basically appropriating features from Chyron Lyric here ;)**
 * Shortcut keys - animate/de-animate?
+
+## Known Issues
+* Currently no support for getting/setting custom audio layouts and mix configs - only the default CCG-provided ones.
