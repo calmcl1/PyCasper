@@ -48,7 +48,7 @@ class Template(CasparObject):
 
     :param str file_name: The name of the template file (including directory, relative to the CasparCG templates \
     folder).
-    :param CasparServer owner_server: The server that the template exists on.
+    :param casparServer owner_server: The server that the template exists on.
 
     """
 

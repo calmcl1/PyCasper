@@ -5,6 +5,6 @@ Provides a wrapper around CasparCG's AMCP commands and handles the communication
 these commands.
 
 """
-from CasparServer import *
+from casparServer import *
 import AMCP
 import CasparObjects
