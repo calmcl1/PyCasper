@@ -714,10 +714,10 @@ def info_config(server):
 
             osc_predef_clients_elem = elem.find("predefined-client")
             for client_elem in osc_predef_clients_elem:
-                addr = client_elem.findtext("address")
-                tcp_port = client_elem.findtext("port")
+                osc_addr = client_elem.findtext("address")
+                osc_port = client_elem.findtext("port")
 
-                osc_pc = casparServer.OSCPredefinedClient(addr, tcp_port)
+                osc_pc = casparServer.OSCPredefinedClient(osc_addr, osc_port)
                 osc.predefined_clients.append(osc_pc)
 
                 client_elem.clear()
