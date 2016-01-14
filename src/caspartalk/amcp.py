@@ -216,9 +216,6 @@ def info_template(server, template_fn):
 
 def info_config(server):
     """
-    .. warning:: This method has not been implemented in UberCarrot yet!
-
-
     Gets the contents of the configuration used.
 
     :param CasparServer server: The :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
@@ -226,9 +223,6 @@ def info_config(server):
     :return: A ServerConfig containing information about the configuration of the server.
     """
     # INFO CONFIG
-    # TODO: Implement info_config command
-
-    raise NotImplementedError
 
     amcp_string = "INFO CONFIG"
     response = server.send_amcp_command(amcp_string)
@@ -237,27 +231,29 @@ def info_config(server):
     # ==============================
     # TODO: Add CasparServer.controllers support
 
-    cnf = casparServer.ServerConfig()
+    server_conf = casparServer.ServerConfig()
 
     # Let's go through the response!
     # To check the text values, we'll use the 'x in elem.text' method, rather than the 'elem.text == x' method,
     # as many of the values are whitespace-padded for readability in the XML config file.
+    # Similarly, the integer values will need casting to int by using int(x), as many of them are type-checked
+    # when assigning the values to a property of a class.
 
     for event, elem in cET.iterparse(response):
         if elem.tag == "log-level":
             # <log-level>       trace [trace|debug|info|warning|error]</log-level>
             for i in casparServer.log_level:
                 if str(i) in elem.tag:
-                    cnf.log_level = i
+                    server_conf.log_level = i
 
             elem.clear()
 
         elif elem.tag == "channel-grid":
             # <channel-grid>    false [true|false]</channel-grid>
             if "true" in elem.tag:
-                cnf.channel_grid = True
+                server_conf.channel_grid = True
             else:
-                cnf.channel_grid = False
+                server_conf.channel_grid = False
             elem.clear()
 
         elif elem.tag == "mixer":
@@ -267,43 +263,44 @@ def info_config(server):
             #    <chroma-key>           false [true|false]</chroma-key>
             #    <mipmapping_default_on>false [true|false]</mipmapping_default_on>
             # </mixer>
-            bm = elem.findtext("blend-modes")
-            sa = elem.findtext("straight-alpha")
-            ck = elem.findtext("chroma-key")
-            mdo = elem.findtext("mipmapping_default_on")
+            mixer_blend_mode = elem.findtext("blend-modes")
+            mixer_straight_alpha = elem.findtext("straight-alpha")
+            mixer_chroma_key = elem.findtext("chroma-key")
+            mixer_mipmapping_on = elem.findtext("mipmapping_default_on")
 
-            if bm and "true" in bm:
-                cnf.mixer["blend_modes"] = True
-            if sa and "true" in sa:
-                cnf.mixer["straight_alpha"] = True
-            if ck and "true" in ck:
-                cnf.mixer["chroma_key"] = True
-            if mdo and "true" in mdo:
-                cnf.mixer["mipmapping_default_on"] = True
+            if mixer_blend_mode and "true" in mixer_blend_mode:
+                server_conf.mixer["blend_modes"] = True
+            if mixer_straight_alpha and "true" in mixer_straight_alpha:
+                server_conf.mixer["straight_alpha"] = True
+            if mixer_chroma_key and "true" in mixer_chroma_key:
+                server_conf.mixer["chroma_key"] = True
+            if mixer_mipmapping_on and "true" in mixer_mipmapping_on:
+                server_conf.mixer["mipmapping_default_on"] = True
             elem.clear()
 
         elif elem.tag == "auto-deinterlace":
             # <auto-deinterlace>true  [true|false]</auto-deinterlace>
             if "true" in elem.text:
-                cnf.auto_deinterlace = True
+                server_conf.auto_deinterlace = True
             else:
-                cnf.auto_deinterlace = False
+                server_conf.auto_deinterlace = False
             elem.clear()
 
         elif elem.tag == "auto-transcode":
             # <auto-transcode>  true  [true|false]</auto-transcode>
             if "true" in elem.text:
-                cnf.auto_transcode = True
+                server_conf.auto_transcode = True
             else:
-                cnf.auto_transcode = False
+                server_conf.auto_transcode = False
             elem.clear()
 
         elif elem.tag == "pipeline-tokens":
             # <pipeline-tokens> 2     [1..]       </pipeline-tokens>
             try:
-                cnf.pipeline_tokens = int(elem.text)
+                server_conf.pipeline_tokens = int(elem.text)
             except ValueError, e:
                 print e.message
+                server_conf.pipeline_tokens = 2
             finally:
                 elem.clear()
 
@@ -323,14 +320,15 @@ def info_config(server):
             # <flash>
             #     <buffer-depth>auto [auto|1..]</buffer-depth>
             # </flash>
-            buf_depth = elem.findtext("buffer-depth")
-            if buf_depth and "auto" in buf_depth:
-                cnf.flash["buffer_depth"] = "auto"
-            elif buf_depth:  # We've got a buffer depth, but it's not 'auto'
+            flash_buffer_depth = elem.findtext("buffer-depth")
+            if flash_buffer_depth and "auto" in flash_buffer_depth:
+                server_conf.flash["buffer_depth"] = "auto"
+            elif flash_buffer_depth:  # We've got a buffer depth, but it's not 'auto'
                 try:
-                    cnf.flash["buffer_depth"] = int(buf_depth)
+                    server_conf.flash["buffer_depth"] = int(flash_buffer_depth)
                 except ValueError, e:
                     print e.message
+                    server_conf.flash["buffer_depth"] = "auto"
             elem.clear()
 
         elif elem.tag == "thumbnails":
@@ -344,53 +342,57 @@ def info_config(server):
             #     <video-mode>720p2500</video-mode>
             #     <mipmap>false</mipmap>
             # </thumbnails>
-            generate_thumbnails = elem.findtext("thumbnails")
-            width = elem.findtext("width")
-            height = elem.findtext("height")
-            video_grid = elem.findtext("video-grid")
-            scan_int = elem.findtext("scan-interval-millis")
-            generate_delay = elem.findtext("generate-delay-millis")
-            video_mode = elem.findtext("video-mode")
-            mipmap = elem.findtext("mipmap")
+            thumb_generate_thumbnails = elem.findtext("thumbnails")
+            thumb_width = elem.findtext("width")
+            thumb_height = elem.findtext("height")
+            thumb_video_grid = elem.findtext("video-grid")
+            thumb_scan_int = elem.findtext("scan-interval-millis")
+            thumb_generate_delay = elem.findtext("generate-delay-millis")
+            thumb_video_mode = elem.findtext("video-mode")
+            thumb_mipmap = elem.findtext("mipmap")
 
-            if generate_thumbnails and "true" in generate_thumbnails:
-                cnf.thumbnails["generate_thumbnails"] = True
+            if thumb_generate_thumbnails and "true" in thumb_generate_thumbnails:
+                server_conf.thumbnails["generate_thumbnails"] = True
             else:
-                cnf.thumbnails["generate_thumbnails"] = False
-            if width:
+                server_conf.thumbnails["generate_thumbnails"] = False
+            if thumb_width:
                 try:
-                    cnf.thumbnails["width"] = int(width)
+                    server_conf.thumbnails["width"] = int(thumb_width)
                 except ValueError, e:
                     print e.message
-                    # TODO: Provide default values
-            if height:
+                    server_conf.thumbnails["width"] = 256
+            if thumb_height:
                 try:
-                    cnf.thumbnails["height"] = int(height)
+                    server_conf.thumbnails["height"] = int(thumb_height)
                 except ValueError, e:
                     print e.message
-            if video_grid:
+                    server_conf.thumbnails["height"] = 144
+            if thumb_video_grid:
                 try:
-                    cnf.thumbnails["video_grid"] = int(video_grid)
+                    server_conf.thumbnails["video_grid"] = int(thumb_video_grid)
                 except ValueError, e:
                     print e.message
-            if scan_int:
+                    server_conf.thumbnails["video_grid"] = 2
+            if thumb_scan_int:
                 try:
-                    cnf.thumbnails["scan_interval_millis"] = int(scan_int)
+                    server_conf.thumbnails["scan_interval_millis"] = int(thumb_scan_int)
                 except ValueError, e:
                     print e.message
-            if generate_delay:
+                    server_conf.thumbnails["scan_interval_millis"] = 5000
+            if thumb_generate_delay:
                 try:
-                    cnf.thumbnails["generate_delay_millis"] = int(generate_delay)
+                    server_conf.thumbnails["generate_delay_millis"] = int(thumb_generate_delay)
                 except ValueError, e:
                     print e.message
-            if video_mode:
+                    server_conf.thumbnails["generate_delay_millis"] = 2000
+            if thumb_video_mode:
                 for i in casparServer.video_mode:
                     if str(i) in elem.tag:
-                        cnf.thumbnails["video_mode"] = i
-            if mipmap and "true" in mipmap:
-                cnf.thumbnails["mipmap"] = True
+                        server_conf.thumbnails["video_mode"] = i
+            if thumb_mipmap and "true" in thumb_mipmap:
+                server_conf.thumbnails["mipmap"] = True
             else:
-                cnf.thumbnails["mipmap"] = False
+                server_conf.thumbnails["mipmap"] = False
 
             elem.clear()
 
@@ -404,18 +406,19 @@ def info_config(server):
             #       <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
             #       <straight-alpha-output>false [true|false]</straight-alpha-output>
             #           <consumers>
-            video_mode = elem.findtext("video_mode")
+            chan_video_mode = elem.findtext("video_mode")
             chan_layout = elem.findtext("channel-layout")
-            straight_alpha = elem.findtext("straight-alpha-output")
-            if video_mode:
-                for i in casparServer.log_level:
-                    if str(i) in video_mode:
+            chan_straight_alpha = elem.findtext("straight-alpha-output")
+
+            if chan_video_mode:
+                for i in casparServer.video_mode:
+                    if str(i) in chan_video_mode:
                         ch.video_mode = i
             if chan_layout:
                 for i in casparServer.channel_layout:
                     if str(i) in chan_layout:
                         ch.channel_layout = i
-            if straight_alpha and "true" in straight_alpha:
+            if chan_straight_alpha and "true" in chan_straight_alpha:
                 ch.straight_alpha_output = True
             else:
                 ch.straight_alpha_output = False
@@ -434,66 +437,64 @@ def info_config(server):
                 #   <custom-allocator>true [true|false]</custom-allocator>
                 # </decklink>
                 consumers_decklink = consumers_elem.findall("decklink")
-                for decklink in consumers_decklink:
+                for decklink_elem in consumers_decklink:
                     dl = casparServer.ConsumerDecklink()
 
-                    device = decklink.findtext("device")
-                    key_device = decklink.findtext("key-device")
-                    embedded_audio = decklink.findtext("embedded-audio")
-                    channel_layout = decklink.findtext("channel-layout")
-                    latency = decklink.findtext("latency")
-                    keyer = decklink.findtext("keyer")
-                    key_only = decklink.findtext("key-only")
-                    buffer_depth = decklink.findtext("buffer-depth")
-                    custom_allocator = decklink.findtext("custom-allocator")
+                    deck_device = decklink_elem.findtext("device")
+                    deck_key_device = decklink_elem.findtext("key-device")
+                    deck_embedded_audio = decklink_elem.findtext("embedded-audio")
+                    deck_channel_layout = decklink_elem.findtext("channel-layout")
+                    deck_latency = decklink_elem.findtext("latency")
+                    deck_keyer = decklink_elem.findtext("keyer")
+                    deck_key_only = decklink_elem.findtext("key-only")
+                    deck_buffer_depth = decklink_elem.findtext("buffer-depth")
+                    deck_custom_allocator = decklink_elem.findtext("custom-allocator")
 
-                    if dl.device:
+                    if deck_device:
                         try:
-                            dl.device = int(device)
+                            dl.device = int(deck_device)
                         except ValueError, e:
                             print e.message
                             dl.device = 1
-                    if dl.key_device:
+                    if deck_key_device:
                         try:
-                            dl.key_device = int(key_device)
+                            dl.key_device = int(deck_key_device)
                         except ValueError, e:
                             print e.message
                             dl.key_device = 2
-                    if embedded_audio and "true" in embedded_audio:
+                    if deck_embedded_audio and "true" in deck_embedded_audio:
                         dl.embedded_audio = True
                     else:
                         dl.embedded_audio = False
-                    if channel_layout:
+                    if deck_channel_layout:
                         for i in casparServer.channel_layout:
-                            if str(i) in channel_layout:
+                            if str(i) in deck_channel_layout:
                                 dl.channel_layout = i
-                    if latency:
+                    if deck_latency:
                         for i in casparServer.latency:
-                            if str(i) in latency:
+                            if str(i) in deck_latency:
                                 dl.latency = i
-                    if keyer:
+                    if deck_keyer:
                         for i in casparServer.keyer:
-                            if str(i) in keyer:
+                            if str(i) in deck_keyer:
                                 dl.keyer = i
-                    if key_only and "true" in key_only:
+                    if deck_key_only and "true" in deck_key_only:
                         dl.key_only = True
                     else:
                         dl.key_only = False
-                    if buffer_depth:
+                    if deck_buffer_depth:
                         try:
-                            dl.buffer_depth = int(buffer_depth)
+                            dl.buffer_depth = int(deck_buffer_depth)
                         except ValueError, e:
                             print e.message
                             dl.buffer_depth = 3
-                    if custom_allocator and "true" in custom_allocator:
-                        dl.custom_allocator = True
-                    elif "false" in custom_allocator:
+                    if deck_custom_allocator and "false" in deck_custom_allocator:
                         dl.custom_allocator = False
                     else:
                         dl.custom_allocator = True
 
                     ch.consumers.append(dl)
-                    decklink.clear()
+                    decklink_elem.clear()
 
                 # <bluefish>
                 #   <device>[1..]</device>
@@ -502,42 +503,41 @@ def info_config(server):
                 #   <key-only>false [true|false]</key-only>
                 # </bluefish>
                 consumers_bluefish = consumers_elem.findall("bluefish")
-                for bluefish in consumers_bluefish:
+                for bluefish_elem in consumers_bluefish:
                     bf = casparServer.ConsumerBluefish()
 
-                    device = bluefish.findtext("device")
-                    embedded_audio = bluefish.findtext("embedded-audio")
-                    channel_layout = bluefish.findtext("channel-layout")
-                    key_only = bluefish.findtext("key-only")
+                    blue_device = bluefish_elem.findtext("device")
+                    blue_embedded_audio = bluefish_elem.findtext("embedded-audio")
+                    blue_channel_layout = bluefish_elem.findtext("channel-layout")
+                    blue_key_only = bluefish_elem.findtext("key-only")
 
-                    if device:
+                    if blue_device:
                         try:
-                            bf.device = int(device)
+                            bf.device = int(blue_device)
                         except ValueError, e:
                             print e.message
                             bf.device = 1
-                    if embedded_audio and "true" in embedded_audio:
+                    if blue_embedded_audio and "true" in blue_embedded_audio:
                         bf.embedded_audio = True
                     else:
                         bf.embedded_audio = False
-                    if channel_layout:
+                    if blue_channel_layout:
                         for i in casparServer.channel_layout:
-                            if str(i) in channel_layout:
+                            if str(i) in blue_channel_layout:
                                 bf.channel_layout = i
-                    if key_only and "true" in key_only:
+                    if blue_key_only and "true" in blue_key_only:
                         bf.key_only = True
                     else:
                         bf.key_only = False
 
                     ch.consumers.append(bf)
-                    bluefish.clear()
+                    bluefish_elem.clear()
 
                 # <system-audio></system-audio>
                 consumers_sysaudio = consumers_elem.findall("system-audio")
                 if consumers_sysaudio:
                     sa = casparServer.ConsumerSystemAudio()
                     ch.consumers.append(sa)
-
 
                 # <screen>
                 #   <device>[0..]</device>
@@ -550,85 +550,85 @@ def info_config(server):
                 #   <name>[Screen Consumer]</name>
                 #   <borderless>false [true|false]</borderless>
                 # </screen>
-                consumers_screen = consumers_elem.findall("screen")
-                for screen in consumers_screen:
+                consumers_screen_elem = consumers_elem.findall("screen")
+                for screen_elem in consumers_screen_elem:
                     sc = casparServer.ConsumerScreen()
 
-                    device = screen.findtext("device")
-                    aspect_ratio = screen.findtext("aspect-ratio")
-                    stretch = screen.findtext("stretch")
-                    windowed = screen.findtext("windowed")
-                    key_only = screen.findtext("key-only")
-                    auto_deinterlace = screen.findtext("auto-deinterlace")
-                    vsync = screen.findtext("vsync")
-                    name = screen.findtext("name")
-                    borderless = screen.findtext("borderless")
+                    scr_device = screen_elem.findtext("device")
+                    scr_aspect_ratio = screen_elem.findtext("aspect-ratio")
+                    scr_stretch = screen_elem.findtext("stretch")
+                    scr_windowed = screen_elem.findtext("windowed")
+                    scr_key_only = screen_elem.findtext("key-only")
+                    scr_auto_deinterlace = screen_elem.findtext("auto-deinterlace")
+                    scr_vsync = screen_elem.findtext("vsync")
+                    scr_name = screen_elem.findtext("name")
+                    scr_borderless = screen_elem.findtext("borderless")
 
-                    if device:
+                    if scr_device:
                         try:
-                            sc.device = int(device)
+                            sc.device = int(scr_device)
                         except ValueError, e:
                             print e.message
                             sc.device = 0
-                    if aspect_ratio:
+                    if scr_aspect_ratio:
                         for i in casparServer.aspect_ratio:
-                            if str(i) in aspect_ratio:
+                            if str(i) in scr_aspect_ratio:
                                 sc.aspect_ratio = i
-                    if stretch:
+                    if scr_stretch:
                         for i in casparServer.stretch:
-                            if str(i) in stretch:
+                            if str(i) in scr_stretch:
                                 sc.stretch = i
-                    if windowed and "true" in windowed:
+                    if scr_windowed and "true" in scr_windowed:
                         sc.windowed = True
                     else:
                         sc.windowed = False
-                    if key_only and "true" in key_only:
+                    if scr_key_only and "true" in scr_key_only:
                         sc.key_only = True
                     else:
                         sc.key_only = False
-                    if auto_deinterlace and "false" in auto_deinterlace:
+                    if scr_auto_deinterlace and "false" in scr_auto_deinterlace:
                         sc.auto_deinterlace = False
                     else:
                         sc.auto_deinterlace = True
-                    if vsync and "true" in vsync:
+                    if scr_vsync and "true" in scr_vsync:
                         sc.vsync = True
                     else:
                         sc.vsync = False
-                    if name:
-                        sc.name = name
+                    if scr_name:
+                        sc.name = scr_name
                     else:
                         sc.name = "[Screen Consumer]"
-                    if borderless and "true" in borderless:
+                    if scr_borderless and "true" in scr_borderless:
                         sc.borderless = True
                     else:
                         sc.borderless = False
 
                     ch.consumers.append(sc)
-                    screen.clear()
+                    screen_elem.clear()
 
                 # <newtek-ivga>
                 #   <channel-layout>stereo [mono|stereo|dts|dolbye|dolbydigital|smpte|passthru]</channel-layout>
                 #   <provide-sync>true [true|false]</provide-sync>
                 # </newtek-ivga>
-                consumers_newtek = consumers_elem.findall("newtek-ivga")
-                for newtek in consumers_newtek:
-                    nt = casparServer.ConsumerNewtekIVGA()
+                consumers_ivga_elem = consumers_elem.findall("newtek-ivga")
+                for ivga_elem in consumers_ivga_elem:
+                    ivga = casparServer.ConsumerNewtekIVGA()
 
-                    channel_layout = newtek.findtext("channel-layout")
-                    provide_sync = newtek.findtext("provide-sync")
+                    ivga_channel_layout = ivga_elem.findtext("channel-layout")
+                    ivga_provide_sync = ivga_elem.findtext("provide-sync")
 
-                    if channel_layout:
+                    if ivga_channel_layout:
                         for i in casparServer.channel_layout:
-                            if str(i) in channel_layout:
-                                nt.channel_layout = i
+                            if str(i) in ivga_channel_layout:
+                                ivga.channel_layout = i
 
-                    if provide_sync and "false" in provide_sync:
-                        nt.provide_sync = False
+                    if ivga_provide_sync and "false" in ivga_provide_sync:
+                        ivga.provide_sync = False
                     else:
-                        nt.provide_sync = True
+                        ivga.provide_sync = True
 
-                    ch.consumers.append(nt)
-                    newtek.clear()
+                    ch.consumers.append(ivga)
+                    ivga_elem.clear()
 
                 # <file>
                 #   <path></path>
@@ -636,47 +636,47 @@ def info_config(server):
                 #   <separate-key>false [true|false]</separate-key>
                 # </file>
 
-                consumers_file = consumers_elem.findall("file")
-                for cfile in consumers_file:
+                consumers_file_elem = consumers_elem.findall("file")
+                for file_elem in consumers_file_elem:
                     cf = casparServer.ConsumerFile()
 
-                    path = cfile.findtext("file")
-                    vcodec = cfile.findtext("vcodec")
-                    separate_key = cfile.findtext("separate-key")
+                    file_path = file_elem.findtext("file")
+                    file_vcodec = file_elem.findtext("vcodec")
+                    file_separate_key = file_elem.findtext("separate-key")
 
-                    if path:
-                        cf.path = path
-                    if vcodec:
+                    if file_path:
+                        cf.path = file_path
+                    if file_vcodec:
                         for i in casparServer.vcodec:
-                            if str(i) in vcodec:
+                            if str(i) in file_vcodec:
                                 cf.vcodec = i
-                    if separate_key and "true" in separate_key:
+                    if file_separate_key and "true" in file_separate_key:
                         cf.separate_key = True
                     else:
                         cf.separate_key = False
 
                     ch.consumers.append(cf)
-                    cfile.clear()
+                    file_elem.clear()
 
                 # <stream>
                 #   <path></path>
                 #   <args></args>
                 # </stream>
-                consumers_stream = consumers_elem.findall("stream")
-                for stream in consumers_stream:
+                consumers_stream_elem = consumers_elem.findall("stream")
+                for stream_elem in consumers_stream_elem:
                     st = casparServer.ConsumerStream()
 
-                    path = stream.findtext("path")
-                    args = stream.findtext("args")
+                    str_path = stream_elem.findtext("path")
+                    str_args = stream_elem.findtext("args")
 
-                    if path:
-                        st.path = path
+                    if str_path:
+                        st.path = str_path
 
-                    if args:
-                        st.args = args
+                    if str_args:
+                        st.args = str_args
 
                     ch.consumers.append(st)
-                    stream.clear()
+                    stream_elem.clear()
 
             consumers_elem.clear()
             elem.clear()  # Clear channel element
@@ -693,34 +693,72 @@ def info_config(server):
         elif elem.tag == "osc":
             osc = casparServer.OSC()
 
-            default_port = elem.findtext("default-port")
+            osc_default_port = elem.findtext("default-port")
             try:
-                osc.default_port = int(default_port)
+                osc.default_port = int(osc_default_port)
             except ValueError, e:
                 print e.message
                 osc.default_port = 6250
 
-            predefined_clients = elem.find("predefined-client")
-            for client in predefined_clients:
-                addr = client.findtext("address")
-                port = client.findtext("port")
+            osc_predef_clients_elem = elem.find("predefined-client")
+            for client_elem in osc_predef_clients_elem:
+                addr = client_elem.findtext("address")
+                port = client_elem.findtext("port")
 
                 osc_pc = casparServer.OSCPredefinedClient(addr, port)
                 osc.predefined_clients.append(osc_pc)
 
-                client.clear()
+                client_elem.clear()
 
-            cnf.osc.append(osc)
+            server_conf.osc.append(osc)
             elem.clear()  # Clear OSC element
 
         elif elem.tag == "audio":
-            # TODO: CONTINUE
             audio_config = casparServer.AudioConfig(False)
 
+            channel_layouts_elem = elem.find("channel-layouts")
+            if channel_layouts_elem:
+                for channel_layout_elem in channel_layouts_elem:
+                    chlay_name = channel_layout_elem.findtext("name")
+                    chlay_type_ = channel_layout_elem.findtext("type")
+                    chlay_num_channels = channel_layout_elem.findtext("num-channels")
+                    chlay_channels = channel_layout_elem.findtext("channels")
 
+                    if chlay_num_channels:
+                        chlay_num_channels = int(chlay_num_channels)
 
+                    if chlay_channels:
+                        # Remove whitespace around channels info - it can mess up the config!
+                        chlay_channels = chlay_channels.strip()
 
-        elem.clear()
+                    cl = casparServer.AudioChannelLayout(chlay_name, chlay_type_, chlay_num_channels, chlay_channels)
+                    audio_config.channel_layouts[chlay_name] = cl
+                channel_layouts_elem.clear()
+
+            mix_configs_elem = elem.find("mix-configs")
+            if mix_configs_elem:
+                for mix_config_elem in mix_configs_elem:
+                    mconf_from_ = mix_config_elem.findtext("from")
+                    mconf_to = mix_config_elem.findtext("to")
+                    mconf_mix = mix_config_elem.findtext("mix")
+                    mconf_mappings = []
+
+                    mappings_elem = mix_config_elem.find("mappings")
+                    if mappings_elem:
+                        for mapping_elem in mappings_elem:
+                            mconf_mapping = mapping_elem.text()
+                            mconf_mappings.append(mconf_mapping)
+                        mappings_elem.clear()
+
+                    mconf_mappings = tuple(mconf_mappings)
+
+                    mc = casparServer.AudioMixConfig(mconf_from_, mconf_to, mconf_mix, mconf_mappings)
+                    audio_config.mix_configs.append(mc)
+                mix_configs_elem.clear()
+            server_conf.audio_configs = mc
+
+        # That's all of the elements in the config!
+    return server_conf
 
 
 def info_paths(server):
