@@ -681,6 +681,19 @@ def info_config(server):
             consumers_elem.clear()
             elem.clear()  # Clear channel element
 
+        elif elem.tag == "controllers":
+            for tcp_elem in elem:
+                tcp_port = tcp_elem.findtext("port")
+                tcp_protocol = tcp_elem.findtext("protocol")
+
+                if tcp_protocol:
+                    for i in casparServer.tcp_protocol:
+                        if str(i) in tcp_protocol:
+                            tcp_protocol = i
+
+                tcp = casparServer.TCPController(tcp_protocol, tcp_port)
+                server_conf.controllers.append(tcp)
+
         # <osc>
         #   <default-port>6250</default-port>
         #   <predefined-clients>
@@ -703,9 +716,9 @@ def info_config(server):
             osc_predef_clients_elem = elem.find("predefined-client")
             for client_elem in osc_predef_clients_elem:
                 addr = client_elem.findtext("address")
-                port = client_elem.findtext("port")
+                tcp_port = client_elem.findtext("port")
 
-                osc_pc = casparServer.OSCPredefinedClient(addr, port)
+                osc_pc = casparServer.OSCPredefinedClient(addr, tcp_port)
                 osc.predefined_clients.append(osc_pc)
 
                 client_elem.clear()

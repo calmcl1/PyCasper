@@ -186,6 +186,8 @@ stretch = Enum('none', 'fill', 'uniform', 'uniform_to_fill')
 # <vcodec>libx264 [libx264|qtrle]</vcodec>
 vcodec = Enum('libx264', 'qtrle')
 
+tcp_protocol = Enum('AMCP', 'LOG')
+
 
 class ServerConfig:
     def __init__(self):
@@ -236,6 +238,7 @@ class ServerConfig:
 
         self.channels = []
         self.osc = []
+        self.controllers = []
         self.audio_configs = AudioConfig(True)
 
 
@@ -374,6 +377,16 @@ class OSCPredefinedClient:
             self.address = address
         else:
             raise TypeError("Expected string for address, got {wrong_t}".format(wrong_t=type(address)))
+
+        if isinstance(port, int):
+            self.port = port
+        else:
+            raise TypeError("Expected int for port, got {wrong_t}".format(wrong_t=type(port)))
+
+
+class TCPController:
+    def __init__(self, protocol, port=5250):
+        self.protocol = protocol
 
         if isinstance(port, int):
             self.port = port
