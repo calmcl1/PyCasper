@@ -229,7 +229,6 @@ def info_config(server):
     response = StringIO.StringIO(string.join(response, ""))
 
     # ==============================
-    # TODO #12: Add CasparServer.controllers support
 
     server_conf = casparServer.ServerConfig()
 
