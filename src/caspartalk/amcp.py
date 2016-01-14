@@ -811,7 +811,7 @@ def info_system(server):
     :return: A list containing various pieces of system information.
     """
     # INFO SYSTEM
-    # TODO: implement INFO SYSTEM command
+    # TODO #4: implement INFO SYSTEM command
 
     # amcp_string = "INFO SYSTEM"
 
@@ -840,7 +840,7 @@ def info_server(server):
     """
 
     # INFO SERVER
-    # TODO: implement INFO SERVER command
+    # TODO #5: implement INFO SERVER command
 
     raise NotImplementedError
 
@@ -969,7 +969,8 @@ def data_remove(server, name):
     """
 
     # DATA REMOVE [name:string]
-    # fixme - a bug with CCG 2.0 means this doens't work, as CCG returns a code 200, rather than 201.
+    # fixme #8 - a bug with CCG 2.0 means this doens't work, as CCG returns a code 200, rather than 201.
+
     # This is fixed in CCG 2.1
 
     amcp_string = "DATA REMOVE {name}".format(name=name)
