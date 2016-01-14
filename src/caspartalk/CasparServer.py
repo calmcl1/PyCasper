@@ -27,7 +27,7 @@ class CasparServer:
 
     """
 
-    # TODO: Add some sort of heartbeat to show that the connection is still alive?
+    # TODO #14: Add some sort of heartbeat to show that the connection is still alive?
 
     def __init__(self, server_ip=None, port=5250):
         # Set up a connection a socket to connect with
@@ -134,7 +134,7 @@ class CasparServer:
             return None
 
     def get_media_on_server(self):
-        # TODO: Implement CasparServer.get_media_on_server
+        # TODO #15: Implement CasparServer.get_media_on_server
         # Use CasparObjects.Media
         raise NotImplementedError
 
@@ -191,7 +191,7 @@ class ServerConfig:
     def __init__(self):
         # This is set up with the default values from the config.
         # Upon initialization, we'll populate these with any values that have been manually overridden.
-        # TODO: Add 'controllers' node
+        # TODO #16: Add 'controllers' node
 
         self.log_level = log_level.trace
         self.channel_grid = False  # <channel-grid>    false [true|false]</channel-grid>
@@ -217,7 +217,7 @@ class ServerConfig:
         # </template-hosts>
         #
 
-        self.template_hosts = {}  # TODO: Create TemplateHost objects
+        self.template_hosts = {}  # TODO #17: Create TemplateHost objects
 
         # <flash>
         self.flash = {'buffer_depth': 'auto'}  # <buffer-depth>auto [auto|1..]</buffer-depth>

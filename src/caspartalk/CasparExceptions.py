@@ -5,9 +5,6 @@ class CasparError(Exception):
     pass
 
 
-# TODO: add context-specific parameters for these errors
-
-
 class CommandNotUnderstoodError(CasparError):
     """Exception raised after a code 400 is returned by CCG.
     400 ERROR	- Command not understood

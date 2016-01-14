@@ -229,7 +229,7 @@ def info_config(server):
     response = StringIO.StringIO(string.join(response, ""))
 
     # ==============================
-    # TODO: Add CasparServer.controllers support
+    # TODO #12: Add CasparServer.controllers support
 
     server_conf = casparServer.ServerConfig()
 
@@ -313,7 +313,7 @@ def info_config(server):
             #        <height/>
             #    </template-host>
             # </template-hosts>
-            # TODO: Support CasparServer TemplateHosts
+            # TODO #13: Support CasparServer TemplateHosts
             elem.clear()
 
         elif elem.tag == "flash":
