@@ -235,7 +235,7 @@ class ServerConfig:
         # </thumbnails>
 
         self.channels = []
-        self.osc = {}
+        self.osc = []
         self.audio_configs = {}
 
 
@@ -258,6 +258,8 @@ class Channel:
         if not isinstance(ch_straight_alpha_output, bool):
             raise ValueError(
                     "Expected a boolean for ch_straight_alpha_output, got {t}".format(t=type(ch_straight_alpha_output)))
+
+        self.straight_alpha_output = ch_straight_alpha_output
 
         if not isinstance(ch_consumers, (list, tuple)):
             raise ValueError("Expected a list of Consumers for ch_consumers, got {t}".format(t=type(ch_consumers)))
