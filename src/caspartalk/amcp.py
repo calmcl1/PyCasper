@@ -679,6 +679,7 @@ def info_config(server):
                     stream.clear()
 
             consumers_elem.clear()
+            elem.clear()  # Clear channel element
 
         # <osc>
         #   <default-port>6250</default-port>
@@ -703,15 +704,19 @@ def info_config(server):
             for client in predefined_clients:
                 addr = client.findtext("address")
                 port = client.findtext("port")
-                osc.predefined_clients[addr] = port
+
+                osc_pc = casparServer.OSCPredefinedClient(addr, port)
+                osc.predefined_clients.append(osc_pc)
 
                 client.clear()
 
             cnf.osc.append(osc)
+            elem.clear()  # Clear OSC element
 
         elif elem.tag == "audio":
             # TODO: CONTINUE
-            pass
+            audio_config = casparServer.AudioConfig(False)
+
 
 
 

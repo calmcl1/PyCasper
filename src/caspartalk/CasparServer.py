@@ -236,7 +236,7 @@ class ServerConfig:
 
         self.channels = []
         self.osc = []
-        self.audio_configs = {}
+        self.audio_configs = AudioConfig(True)
 
 
 class Channel:
@@ -357,7 +357,7 @@ class ConsumerStream(Consumer):
 class OSC:
     def __init__(self, default_port=None):
         self.default_port = 6250
-        self.predefined_clients = {}  # {"address" : port, ...}
+        self.predefined_clients = []
 
         if isinstance(default_port, int):
             self.default_port = default_port
@@ -366,63 +366,82 @@ class OSC:
             raise TypeError("Expected int for default_port, got {wrong_t}".format(wrong_t=type(default_port)))
 
 
-class AudioConfig:
-    def __init__(self):
-        self.channel_layouts = {AudioChannelLayout("mono", "1.0", 1, "C"),
-                                AudioChannelLayout("stereo", "2.0", 2, "L R"),
-                                AudioChannelLayout("dts", "5.1", 6, "C L R Ls Rs LFE"),
-                                AudioChannelLayout("dolbye", "5.1+stereomix", 8, "L R C LFE Ls Rs Lmix Rmix"),
-                                AudioChannelLayout("dolbydigital", "5.1", 6, "L C R Ls Rs LFE"),
-                                AudioChannelLayout("smpte", "5.1", 6, "L R C LFE Ls Rs"),
-                                AudioChannelLayout("passthru", "16ch", 16)
-                                }
+class OSCPredefinedClient:
+    def __init__(self, address="localhost", port=5253):
+        self.address = self.port = None
 
-        self.mix_configs = [AudioMixConfig("1.0", "2.0", "add", ("C L 1.0", "C R 1.0")),
-                            AudioMixConfig("1.0", "5.1", "add", ("C L 1.0", "C R 1.0")),
-                            AudioMixConfig("1.0", "5.1+stereomix", "add", ("C L 1.0",
-                                                                           "C R 1.0",
-                                                                           "C Lmix 1.0",
-                                                                           "C Rmix 1.0")),
-                            AudioMixConfig("2.0", "1.0", "add", ("L C 1.0", "R C 1.0")),
-                            AudioMixConfig("2.0", "5.1", "add", ("L L 1.0", "R R 1.0")),
-                            AudioMixConfig("2.0", "5.1+stereomix", "add", ("L L 1.0",
-                                                                           "R R 1.0",
-                                                                           "R RMix 1.0")),
-                            AudioMixConfig("5.1", "1.0", "average", ("L C 1.0",
-                                                                     "R C 1.0",
-                                                                     "C C 0.707",
-                                                                     "Ls C 0.707",
-                                                                     "Rs C 0.707")),
-                            AudioMixConfig("5.1", "2.0", "average", ("L L 1.0",
-                                                                     "R R 1.0",
-                                                                     "C L 0.707",
-                                                                     "C R 0.707",
-                                                                     "L Lmix 1.0",
-                                                                     "Ls L 0.707",
-                                                                     "Rs R 0.707")),
-                            AudioMixConfig("5.1", "5.1+stereomix", "average", ("L L 1.0",
+        if isinstance(address, str):
+            self.address = address
+        else:
+            raise TypeError("Expected string for address, got {wrong_t}".format(wrong_t=type(address)))
+
+        if isinstance(port, int):
+            self.port = port
+        else:
+            raise TypeError("Expected int for port, got {wrong_t}".format(wrong_t=type(port)))
+
+
+class AudioConfig:
+    def __init__(self, use_default=True):
+        self.channel_layouts = {}
+        self.mix_configs = []
+
+        if use_default:
+            self.channel_layouts = {AudioChannelLayout("mono", "1.0", 1, "C"),
+                                    AudioChannelLayout("stereo", "2.0", 2, "L R"),
+                                    AudioChannelLayout("dts", "5.1", 6, "C L R Ls Rs LFE"),
+                                    AudioChannelLayout("dolbye", "5.1+stereomix", 8, "L R C LFE Ls Rs Lmix Rmix"),
+                                    AudioChannelLayout("dolbydigital", "5.1", 6, "L C R Ls Rs LFE"),
+                                    AudioChannelLayout("smpte", "5.1", 6, "L R C LFE Ls Rs"),
+                                    AudioChannelLayout("passthru", "16ch", 16)
+                                    }
+
+            self.mix_configs = [AudioMixConfig("1.0", "2.0", "add", ("C L 1.0", "C R 1.0")),
+                                AudioMixConfig("1.0", "5.1", "add", ("C L 1.0", "C R 1.0")),
+                                AudioMixConfig("1.0", "5.1+stereomix", "add", ("C L 1.0",
+                                                                               "C R 1.0",
+                                                                               "C Lmix 1.0",
+                                                                               "C Rmix 1.0")),
+                                AudioMixConfig("2.0", "1.0", "add", ("L C 1.0", "R C 1.0")),
+                                AudioMixConfig("2.0", "5.1", "add", ("L L 1.0", "R R 1.0")),
+                                AudioMixConfig("2.0", "5.1+stereomix", "add", ("L L 1.0",
+                                                                               "R R 1.0",
+                                                                               "R RMix 1.0")),
+                                AudioMixConfig("5.1", "1.0", "average", ("L C 1.0",
+                                                                         "R C 1.0",
+                                                                         "C C 0.707",
+                                                                         "Ls C 0.707",
+                                                                         "Rs C 0.707")),
+                                AudioMixConfig("5.1", "2.0", "average", ("L L 1.0",
+                                                                         "R R 1.0",
+                                                                         "C L 0.707",
+                                                                         "C R 0.707",
+                                                                         "L Lmix 1.0",
+                                                                         "Ls L 0.707",
+                                                                         "Rs R 0.707")),
+                                AudioMixConfig("5.1", "5.1+stereomix", "average", ("L L 1.0",
+                                                                                   "R R 1.0",
+                                                                                   "C C 1.0",
+                                                                                   "Ls Ls 1.0",
+                                                                                   "Rs Rs 1.0",
+                                                                                   "LFE LFE 1.0",
+                                                                                   "L Lmix 1.0",
+                                                                                   "R Rmix 1.0",
+                                                                                   "C Lmix 0.707",
+                                                                                   "C Rmix 0.707",
+                                                                                   "Ls Lmix 0.707",
+                                                                                   "Rs Rmix 0.707")),
+                                AudioMixConfig("5.1+stereomix", "1.0", "add", ("Lmix C 1.0",
+                                                                               "Rmix C 1.0")),
+                                AudioMixConfig("5.1+stereomix", "2.0", "add", ("Lmix L 1.0",
+                                                                               "Rmix R 1.0")),
+                                AudioMixConfig("5.1+stereomix", "5.1", "add", ("L L 1.0",
                                                                                "R R 1.0",
                                                                                "C C 1.0",
                                                                                "Ls Ls 1.0",
                                                                                "Rs Rs 1.0",
-                                                                               "LFE LFE 1.0",
-                                                                               "L Lmix 1.0",
-                                                                               "R Rmix 1.0",
-                                                                               "C Lmix 0.707",
-                                                                               "C Rmix 0.707",
-                                                                               "Ls Lmix 0.707",
-                                                                               "Rs Rmix 0.707")),
-                            AudioMixConfig("5.1+stereomix", "1.0", "add", ("Lmix C 1.0",
-                                                                           "Rmix C 1.0")),
-                            AudioMixConfig("5.1+stereomix", "2.0", "add", ("Lmix L 1.0",
-                                                                           "Rmix R 1.0")),
-                            AudioMixConfig("5.1+stereomix", "5.1", "add", ("L L 1.0",
-                                                                           "R R 1.0",
-                                                                           "C C 1.0",
-                                                                           "Ls Ls 1.0",
-                                                                           "Rs Rs 1.0",
-                                                                           "LFE LFE 1.0"))
-                            ]
+                                                                               "LFE LFE 1.0"))
+                                ]
 
 
 class AudioChannelLayout:
