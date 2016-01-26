@@ -835,23 +835,21 @@ def info_paths(server):
 
 def info_system(server):
     """
-    .. warning:: This method has not been implemented in UberCarrot yet!
-
     Gets system information like OS, CPU and library version numbers.
 
     :param CasparServer server: The :py:class:`~caspartalk.CasparServer` that the *amcp_command* will be sent to.
-    :rtype: List
-    :return: A list containing various pieces of system information.
+    :rtype: Dictionary
+    :return: A dictionary containing various pieces of system information.
     """
     # INFO SYSTEM
 
     amcp_string = "INFO SERVER"
 
-    response = self.send_command_to_caspar(server, amcp_string)
+    response = server.send_command_to_caspar(amcp_string)
     if not response: return None
     response = StringIO.StringIO(string.join(response, ""))
 
-    for event, elem in CET.iterparse(response):
+    for event, elem in cET.iterparse(response):
         system = {}
         if elem.tag == "name":
             sys_name = elem.text
@@ -880,9 +878,9 @@ def info_system(server):
             sys_caspar_th = elem.findtext("template-host")
             sys_caspar_fi = elem.findtext("free-image")
 
-            if sys_caspar_flash : caspar["flash"] = sys_caspar_flash
+            if sys_caspar_flash: caspar["flash"] = sys_caspar_flash
             if sys_caspar_th: caspar["template_host"] = sys_caspar_th
-            if sys_caspar_fi: caspar["free_image"] = sys_casparfi
+            if sys_caspar_fi: caspar["free_image"] = sys_caspar_fi
 
             system["caspar"] = caspar
 
