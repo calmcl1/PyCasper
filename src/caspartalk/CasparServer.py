@@ -35,7 +35,8 @@ class CasparServer:
         self.buffer_size = 4096
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        if server_ip: self.connect(server_ip, port)
+        if server_ip:
+            self.connect(server_ip, port)
 
         # Set the paths relevant to the server
         self.paths = {"media": "",
@@ -105,7 +106,8 @@ class CasparServer:
         # Let's get rid of them.
 
         for l in lines:
-            if len(l): ret.append(l)
+            if len(l):
+                ret.append(l)
 
         return ret
 
@@ -120,7 +122,8 @@ class CasparServer:
         """
 
         print "Sending command:", amcp_command
-        if not amcp_command.endswith("\r\n"): amcp_command += "\r\n"
+        if not amcp_command.endswith("\r\n"):
+            amcp_command += "\r\n"
         self.send_string(amcp_command)
 
         response = self.read_until("\r\n")
