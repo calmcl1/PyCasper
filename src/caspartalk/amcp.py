@@ -844,21 +844,68 @@ def info_system(server):
     :return: A list containing various pieces of system information.
     """
     # INFO SYSTEM
-    # TODO #4: implement INFO SYSTEM command
 
-    # amcp_string = "INFO SYSTEM"
+    amcp_string = "INFO SERVER"
 
-    # response = self.send_command_to_caspar(server, amcp_string)
-    # for r in response: print r
-    # response = StringIO.StringIO(string.join(response, ""))
+    response = self.send_command_to_caspar(server, amcp_string)
+    if not response: return None
+    response = StringIO.StringIO(string.join(response, ""))
 
-    # for event, elem in CET.iterparse(response):
-    #    if elem.tag == "paths":
-    #        print "Skipping <paths> - use INFO PATHS instead"
-    #        elem.clear()
-    #    else: print CET.dump(elem)
+    for event, elem in CET.iterparse(response):
+        system = {}
+        if elem.tag == "name":
+            sys_name = elem.text
+            if sys_name: system["name"] = sys_name
+            elem.clear()
+        if elem.tag == "windows":
+            windows = {}
+            sys_windows_name = elem.findtext("name")
+            sys_windows_sp = elem.findtext("service-pack")
 
-    raise NotImplementedError
+            if sys_windows_name: windows["name"] = sys_windows_name
+            if sys_windows_sp: windows["service_pack"] = sys_windows_sp
+
+            system["windows"] = windows
+
+            elem.clear()
+        if elem.tag == "cpu":
+            sys_cpu = elem.text
+
+            if sys_cpu: system["cpu"] = sys_cpu
+
+            elem.clear()
+        if elem.tag == "caspar":
+            caspar = {}
+            sys_caspar_flash = elem.findtext("flash")
+            sys_caspar_th = elem.findtext("template-host")
+            sys_caspar_fi = elem.findtext("free-image")
+
+            if sys_caspar_flash : caspar["flash"] = sys_caspar_flash
+            if sys_caspar_th: caspar["template_host"] = sys_caspar_th
+            if sys_caspar_fi: caspar["free_image"] = sys_casparfi
+
+            system["caspar"] = caspar
+
+            elem.clear()
+        if elem.tag == "ffmpeg":
+            ffmpeg = {}
+            sys_ff_avcodec = elem.findtext("avcodec")
+            sys_ff_avformat = elem.findtext("avformat")
+            sys_ff_avfilter = elem.findtext("avfilter")
+            sys_ff_avutil = elem.findtext("avutil")
+            sys_ff_swscale = elem.findtext("swscale")
+
+            if sys_ff_avcodec: ffmpeg["avcodec"] = sys_ff_avcodec
+            if sys_ff_avformat: ffmpeg["avformat"] = sys_ff_avformat
+            if sys_ff_avfilter: ffmpeg["avfilter"] = sys_ff_avfilter
+            if sys_ff_avutil: ffmpeg["avutil"] = sys_ff_avutil
+            if sys_ff_swscale: ffmpeg["swscale"] = sys_ff_swscale
+
+            system["caspar"]["ffmpeg"] = ffmpeg
+
+            elem.clear()
+
+    return system
 
 
 def info_server(server):
@@ -876,6 +923,19 @@ def info_server(server):
     # TODO #5: implement INFO SERVER command
 
     raise NotImplementedError
+
+    # amcp_string = "INFO SERVER"
+
+    # response = self.send_command_to_caspar(server, amcp_string)
+    # if not response: return None
+    # response = StringIO.StringIO(string.join(response, ""))
+
+    # for event, elem in CET.iterparse(response):
+    #     if elem.tag == "paths":
+    #         print "Skipping <paths> - use INFO PATHS instead"
+    #         elem.clear()
+    #     else:
+    #         print CET.dump(elem)
 
 
 def bye(server):
