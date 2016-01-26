@@ -218,7 +218,7 @@ class ServerConfig:
         # </template-hosts>
         #
 
-        self.template_hosts = {}  # TODO #17: Create TemplateHost objects
+        self.template_hosts = {}
 
         # <flash>
         self.flash = {'buffer_depth': 'auto'}  # <buffer-depth>auto [auto|1..]</buffer-depth>
@@ -354,6 +354,22 @@ class ConsumerStream(Consumer):
         self.path = ""  # <path></path>
         self.args = ""  # <args></args>
         # </stream>
+
+
+class TemplateHost:
+    def __init__(self, th_video_mode=None, th_filename=None, th_width=None, th_height=None):
+        # <template-hosts>
+        #    <template-host>
+        #        <video-mode/>
+        #        <filename/>
+        #        <width/>
+        #        <height/>
+        #    </template-host>
+        # </template-hosts>
+        self.video_mode = th_video_mode | video_mode.vm_PAL
+        self.filename = th_filename | ""
+        self.width = th_width | 0
+        self.height = th_height | 0
 
 
 class OSC:
