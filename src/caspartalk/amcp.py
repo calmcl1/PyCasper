@@ -788,7 +788,7 @@ def info_config(server):
                     mc = casparServer.AudioMixConfig(mconf_from_, mconf_to, mconf_mix, mconf_mappings)
                     audio_config.mix_configs.append(mc)
                 mix_configs_elem.clear()
-            server_conf.audio_configs = mc
+            server_conf.audio_configs = audio_config
 
             # That's all of the elements in the config!
     return server_conf
@@ -849,8 +849,9 @@ def info_system(server):
     if not response: return None
     response = StringIO.StringIO(string.join(response, ""))
 
+    system = {}
+    
     for event, elem in cET.iterparse(response):
-        system = {}
         if elem.tag == "name":
             sys_name = elem.text
             if sys_name: system["name"] = sys_name
