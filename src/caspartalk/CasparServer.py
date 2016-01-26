@@ -218,7 +218,7 @@ class ServerConfig:
         # </template-hosts>
         #
 
-        self.template_hosts = {}
+        self.template_hosts = []
 
         # <flash>
         self.flash = {'buffer_depth': 'auto'}  # <buffer-depth>auto [auto|1..]</buffer-depth>

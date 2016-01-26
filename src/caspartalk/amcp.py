@@ -312,7 +312,28 @@ def info_config(server):
             #        <height/>
             #    </template-host>
             # </template-hosts>
-            # TODO #13: Support CasparServer TemplateHosts
+            th_video_mode = elem.findtext("video-mode")
+            th_filename = elem.findtext("filename")
+            th_width = elem.findtext("width")
+            th_height = elem.findtext("height")
+
+            for i in casparServer.video_mode:
+                if str(i) in elem.tag:
+                    th_video_mode = i
+            if th_width:
+                try:
+                    th_width = int(th_width)
+                except ValueError, e:
+                    print e.message
+                    th_width = 0
+            if th_height:
+                try:
+                    th_height = int(th_height)
+                except ValueError, e:
+                    print e.message
+                    th_height = 0
+            th = casparServer.TemplateHost(th_video_mode, th_filename, th_width, th_height)
+            server_conf.template_hosts.append(th)
             elem.clear()
 
         elif elem.tag == "flash":
@@ -769,7 +790,7 @@ def info_config(server):
                 mix_configs_elem.clear()
             server_conf.audio_configs = mc
 
-        # That's all of the elements in the config!
+            # That's all of the elements in the config!
     return server_conf
 
 
