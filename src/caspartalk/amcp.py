@@ -846,23 +846,27 @@ def info_system(server):
     amcp_string = "INFO SERVER"
 
     response = server.send_command_to_caspar(amcp_string)
-    if not response: return None
+    if not response:
+        return None
     response = StringIO.StringIO(string.join(response, ""))
 
     system = {}
-    
+
     for event, elem in cET.iterparse(response):
         if elem.tag == "name":
             sys_name = elem.text
-            if sys_name: system["name"] = sys_name
+            if sys_name:
+                system["name"] = sys_name
             elem.clear()
         if elem.tag == "windows":
             windows = {}
             sys_windows_name = elem.findtext("name")
             sys_windows_sp = elem.findtext("service-pack")
 
-            if sys_windows_name: windows["name"] = sys_windows_name
-            if sys_windows_sp: windows["service_pack"] = sys_windows_sp
+            if sys_windows_name:
+                windows["name"] = sys_windows_name
+            if sys_windows_sp:
+                windows["service_pack"] = sys_windows_sp
 
             system["windows"] = windows
 
@@ -879,9 +883,12 @@ def info_system(server):
             sys_caspar_th = elem.findtext("template-host")
             sys_caspar_fi = elem.findtext("free-image")
 
-            if sys_caspar_flash: caspar["flash"] = sys_caspar_flash
-            if sys_caspar_th: caspar["template_host"] = sys_caspar_th
-            if sys_caspar_fi: caspar["free_image"] = sys_caspar_fi
+            if sys_caspar_flash:
+                caspar["flash"] = sys_caspar_flash
+            if sys_caspar_th:
+                caspar["template_host"] = sys_caspar_th
+            if sys_caspar_fi:
+                caspar["free_image"] = sys_caspar_fi
 
             system["caspar"] = caspar
 
@@ -894,11 +901,16 @@ def info_system(server):
             sys_ff_avutil = elem.findtext("avutil")
             sys_ff_swscale = elem.findtext("swscale")
 
-            if sys_ff_avcodec: ffmpeg["avcodec"] = sys_ff_avcodec
-            if sys_ff_avformat: ffmpeg["avformat"] = sys_ff_avformat
-            if sys_ff_avfilter: ffmpeg["avfilter"] = sys_ff_avfilter
-            if sys_ff_avutil: ffmpeg["avutil"] = sys_ff_avutil
-            if sys_ff_swscale: ffmpeg["swscale"] = sys_ff_swscale
+            if sys_ff_avcodec:
+                ffmpeg["avcodec"] = sys_ff_avcodec
+            if sys_ff_avformat:
+                ffmpeg["avformat"] = sys_ff_avformat
+            if sys_ff_avfilter:
+                ffmpeg["avfilter"] = sys_ff_avfilter
+            if sys_ff_avutil:
+                ffmpeg["avutil"] = sys_ff_avutil
+            if sys_ff_swscale:
+                ffmpeg["swscale"] = sys_ff_swscale
 
             system["caspar"]["ffmpeg"] = ffmpeg
 
