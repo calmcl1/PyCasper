@@ -8,3 +8,4 @@ these commands.
 from casparServer import *
 import AMCP
 import CasparObjects
+import CasparExceptions
