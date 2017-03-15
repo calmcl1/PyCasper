@@ -26,7 +26,8 @@ def tls(server):
 
     # The template list is returned in the following fashion (each line is an array entry):
     # "RELATIVE-PATH/TEMPLATE-NAME" SIZE-IN-BYTES TIMESTAMP
-    # We'll strip the first quote and everything after (and including) the last quote
+    # We'll strip the first quote and everything after (and including) the
+    # last quote
 
     for t in templates_response:
         if not t[0] == '"':
@@ -110,7 +111,8 @@ def info_template(server, template_fn):
     # INFO TEMPLATE [template:string]
 
     if not isinstance(template_fn, str):
-        raise TypeError("Expected string for template, got {0}".format(type(template_fn)))
+        raise TypeError(
+            "Expected string for template, got {0}".format(type(template_fn)))
 
     amcp_string = "INFO TEMPLATE {template}".format(template=template_fn)
 
@@ -149,9 +151,11 @@ def info_template(server, template_fn):
         if "originalHeight" in el_template.attrib.keys():
             template.original_height = el_template.attrib["originalHeight"]
         if "originalFrameRate" in el_template.attrib.keys():
-            template.original_frame_rate = el_template.attrib["originalFrameRate"]
+            template.original_frame_rate = el_template.attrib[
+                "originalFrameRate"]
 
-    # Find all the components and their properties, then add these to the Template
+    # Find all the components and their properties, then add these to the
+    # Template
     el_components = el_template.find("components").findall("component")
     if el_components is not None and len(list(el_components)):
         for comp in list(el_components):
@@ -165,8 +169,10 @@ def info_template(server, template_fn):
                 print "\t\tType:", prop_type
                 prop_info = prop.attrib["info"]
                 print "\t\tInfo:", prop_info
-            comp_prop = CasparObjects.ComponentProperty(prop_id, prop_type, prop_info)
-            template.components[comp.attrib["name"]] = CasparObjects.TypedDict(CasparObjects.ComponentProperty)
+            comp_prop = CasparObjects.ComponentProperty(
+                prop_id, prop_type, prop_info)
+            template.components[comp.attrib["name"]] = CasparObjects.TypedDict(
+                CasparObjects.ComponentProperty)
             template.components[comp.attrib["name"]][prop_id] = comp_prop
     else:
         print "\tNo components found"
@@ -206,7 +212,8 @@ def info_template(server, template_fn):
             print "\t\tType:", param_type
             param_info = param.attrib["info"]
             print "\t\tInfo:", param_info
-            temp_param = CasparObjects.TemplateParameter(param_id, param_type, param_info)
+            temp_param = CasparObjects.TemplateParameter(
+                param_id, param_type, param_info)
             template.parameters[param_id] = temp_param
     else:
         print "\tNo parameters found"
@@ -332,7 +339,8 @@ def info_config(server):
                 except ValueError, e:
                     print e.message
                     th_height = 0
-            th = casparServer.TemplateHost(th_video_mode, th_filename, th_width, th_height)
+            th = casparServer.TemplateHost(
+                th_video_mode, th_filename, th_width, th_height)
             server_conf.template_hosts.append(th)
             elem.clear()
 
@@ -389,19 +397,22 @@ def info_config(server):
                     server_conf.thumbnails["height"] = 144
             if thumb_video_grid:
                 try:
-                    server_conf.thumbnails["video_grid"] = int(thumb_video_grid)
+                    server_conf.thumbnails[
+                        "video_grid"] = int(thumb_video_grid)
                 except ValueError, e:
                     print e.message
                     server_conf.thumbnails["video_grid"] = 2
             if thumb_scan_int:
                 try:
-                    server_conf.thumbnails["scan_interval_millis"] = int(thumb_scan_int)
+                    server_conf.thumbnails[
+                        "scan_interval_millis"] = int(thumb_scan_int)
                 except ValueError, e:
                     print e.message
                     server_conf.thumbnails["scan_interval_millis"] = 5000
             if thumb_generate_delay:
                 try:
-                    server_conf.thumbnails["generate_delay_millis"] = int(thumb_generate_delay)
+                    server_conf.thumbnails["generate_delay_millis"] = int(
+                        thumb_generate_delay)
                 except ValueError, e:
                     print e.message
                     server_conf.thumbnails["generate_delay_millis"] = 2000
@@ -462,13 +473,16 @@ def info_config(server):
 
                     deck_device = decklink_elem.findtext("device")
                     deck_key_device = decklink_elem.findtext("key-device")
-                    deck_embedded_audio = decklink_elem.findtext("embedded-audio")
-                    deck_channel_layout = decklink_elem.findtext("channel-layout")
+                    deck_embedded_audio = decklink_elem.findtext(
+                        "embedded-audio")
+                    deck_channel_layout = decklink_elem.findtext(
+                        "channel-layout")
                     deck_latency = decklink_elem.findtext("latency")
                     deck_keyer = decklink_elem.findtext("keyer")
                     deck_key_only = decklink_elem.findtext("key-only")
                     deck_buffer_depth = decklink_elem.findtext("buffer-depth")
-                    deck_custom_allocator = decklink_elem.findtext("custom-allocator")
+                    deck_custom_allocator = decklink_elem.findtext(
+                        "custom-allocator")
 
                     if deck_device:
                         try:
@@ -527,8 +541,10 @@ def info_config(server):
                     bf = casparServer.ConsumerBluefish()
 
                     blue_device = bluefish_elem.findtext("device")
-                    blue_embedded_audio = bluefish_elem.findtext("embedded-audio")
-                    blue_channel_layout = bluefish_elem.findtext("channel-layout")
+                    blue_embedded_audio = bluefish_elem.findtext(
+                        "embedded-audio")
+                    blue_channel_layout = bluefish_elem.findtext(
+                        "channel-layout")
                     blue_key_only = bluefish_elem.findtext("key-only")
 
                     if blue_device:
@@ -579,7 +595,8 @@ def info_config(server):
                     scr_stretch = screen_elem.findtext("stretch")
                     scr_windowed = screen_elem.findtext("windowed")
                     scr_key_only = screen_elem.findtext("key-only")
-                    scr_auto_deinterlace = screen_elem.findtext("auto-deinterlace")
+                    scr_auto_deinterlace = screen_elem.findtext(
+                        "auto-deinterlace")
                     scr_vsync = screen_elem.findtext("vsync")
                     scr_name = screen_elem.findtext("name")
                     scr_borderless = screen_elem.findtext("borderless")
@@ -754,17 +771,20 @@ def info_config(server):
                 for channel_layout_elem in channel_layouts_elem:
                     chlay_name = channel_layout_elem.findtext("name")
                     chlay_type_ = channel_layout_elem.findtext("type")
-                    chlay_num_channels = channel_layout_elem.findtext("num-channels")
+                    chlay_num_channels = channel_layout_elem.findtext(
+                        "num-channels")
                     chlay_channels = channel_layout_elem.findtext("channels")
 
                     if chlay_num_channels:
                         chlay_num_channels = int(chlay_num_channels)
 
                     if chlay_channels:
-                        # Remove whitespace around channels info - it can mess up the config!
+                        # Remove whitespace around channels info - it can mess
+                        # up the config!
                         chlay_channels = chlay_channels.strip()
 
-                    cl = casparServer.AudioChannelLayout(chlay_name, chlay_type_, chlay_num_channels, chlay_channels)
+                    cl = casparServer.AudioChannelLayout(
+                        chlay_name, chlay_type_, chlay_num_channels, chlay_channels)
                     audio_config.channel_layouts[chlay_name] = cl
                 channel_layouts_elem.clear()
 
@@ -785,7 +805,8 @@ def info_config(server):
 
                     mconf_mappings = tuple(mconf_mappings)
 
-                    mc = casparServer.AudioMixConfig(mconf_from_, mconf_to, mconf_mix, mconf_mappings)
+                    mc = casparServer.AudioMixConfig(
+                        mconf_from_, mconf_to, mconf_mix, mconf_mappings)
                     audio_config.mix_configs.append(mc)
                 mix_configs_elem.clear()
             server_conf.audio_configs = audio_config
@@ -874,7 +895,8 @@ def info_system(server):
         if elem.tag == "cpu":
             sys_cpu = elem.text
 
-            if sys_cpu: system["cpu"] = sys_cpu
+            if sys_cpu:
+                system["cpu"] = sys_cpu
 
             elem.clear()
         if elem.tag == "caspar":
@@ -1073,7 +1095,8 @@ def data_remove(server, name):
     """
 
     # DATA REMOVE [name:string]
-    # fixme #8 - a bug with CCG 2.0 means this doens't work, as CCG returns a code 200, rather than 201.
+    # fixme #8 - a bug with CCG 2.0 means this doens't work, as CCG returns a
+    # code 200, rather than 201.
 
     # This is fixed in CCG 2.1
 
@@ -1107,12 +1130,13 @@ def cg_add(server, template, channel=1, layer=10, cg_layer=0, play_on_load=0, da
     :rtype: Bool
     :return: True if successful, otherwise False.
     """
-    # CG [video_channel:int]{-[layer:int]|-9999} ADD [cg_layer:int] [template:string] [play-on-load:0,1] {[data]}
+    # CG [video_channel:int]{-[layer:int]|-9999} ADD [cg_layer:int]
+    # [template:string] [play-on-load:0,1] {[data]}
 
     data = json.dumps(data)  # Escape quotes, etc.
     amcp_string = "CG {video_channel}-{layer} ADD {cg_layer} {template} {play_on_load} {data}".format(
-            video_channel=channel, layer=layer, cg_layer=cg_layer, template=template, play_on_load=play_on_load,
-            data=data)
+        video_channel=channel, layer=layer, cg_layer=cg_layer, template=template, play_on_load=play_on_load,
+        data=data)
 
     try:
         server.send_amcp_command(amcp_string)
@@ -1234,7 +1258,8 @@ def cg_clear(server, channel=1, layer=10):
     """
     # CG [video_channel:int]{-[layer:int]|-9999} CLEAR
 
-    amcp_string = "CG {video_channel}-{layer} CLEAR".format(video_channel=channel, layer=layer)
+    amcp_string = "CG {video_channel}-{layer} CLEAR".format(
+        video_channel=channel, layer=layer)
 
     try:
         server.send_amcp_command(amcp_string)
@@ -1257,7 +1282,8 @@ def cg_update(server, channel=1, layer=10, cg_layer=0, data=None):
     :rtype: Bool
     :return: True if successful, otherwise False.
     """
-    # CG [video_channel:int]{-[layer:int]|-9999} UPDATE [cg_layer:int] [data:string]
+    # CG [video_channel:int]{-[layer:int]|-9999} UPDATE [cg_layer:int]
+    # [data:string]
 
     data = json.dumps(data)  # Escape quotes, etc.
     amcp_string = "CG {video_channel}-{layer} UPDATE {cg_layer} {data}".format(video_channel=channel,
@@ -1288,7 +1314,8 @@ def cg_invoke(server, method, channel=1, layer=10, cg_layer=0):
     :rtype: Bool
     :return: True if successful, otherwise False.
     """
-    # CG [video_channel:int]{-[layer:int]|-9999} INVOKE [cg_layer:int] [method:string]
+    # CG [video_channel:int]{-[layer:int]|-9999} INVOKE [cg_layer:int]
+    # [method:string]
 
     amcp_string = "CG {video_channel}-{layer} INVOKE {cg_layer} {method}".format(video_channel=channel, layer=layer,
                                                                                  cg_layer=cg_layer, method=method)

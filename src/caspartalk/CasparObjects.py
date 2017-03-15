@@ -55,7 +55,8 @@ class Template(CasparObject):
     def __init__(self, owner_server, file_name):
         CasparObject.__init__(self)
 
-        self.file_name = file_name  # The name of the file + relative directory to CCG templates folder
+        # The name of the file + relative directory to CCG templates folder
+        self.file_name = file_name
         self.owner_server = owner_server  # The server that the template exists on
 
         self.version = None
@@ -110,10 +111,10 @@ class TemplateParameter(object):
             self._value = param_value
         else:
             raise TypeError(
-                    "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=param_value,
-                                                                                                     correct_type=expected_type,
-                                                                                                     wrong_type=type(
-                                                                                                             param_value)))
+                "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=param_value,
+                                                                                                 correct_type=expected_type,
+                                                                                                 wrong_type=type(
+                                                                                                     param_value)))
 
     def get_value(self):
         return self._value
@@ -157,10 +158,10 @@ class ComponentProperty(object):
             self._value = data_value
         else:
             raise TypeError(
-                    "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=data_value,
-                                                                                                     correct_type=expected_type,
-                                                                                                     wrong_type=type(
-                                                                                                             data_value)))
+                "Expected {value} to be of type {correct_type}; got {wrong_type} instead".format(value=data_value,
+                                                                                                 correct_type=expected_type,
+                                                                                                 wrong_type=type(
+                                                                                                     data_value)))
 
     def get_value(self):
         return self._value
@@ -188,7 +189,8 @@ class TypedDict(collections.MutableMapping):
         if isinstance(value_type, TypedDict):
             value_type = TypedDict
         elif not isinstance(value_type, types.TypeType):
-            raise TypeError("value_type is not a type, got {arg} instead".format(arg=type(value_type)))
+            raise TypeError(
+                "value_type is not a type, got {arg} instead".format(arg=type(value_type)))
 
         self._value_type = value_type
 
@@ -197,7 +199,8 @@ class TypedDict(collections.MutableMapping):
 
     def __setitem__(self, key, value):
         if not isinstance(value, self.value_type):
-            raise TypeError("{value} is not a {type}.".format(value=value, type=self.value_type))
+            raise TypeError("{value} is not a {type}.".format(
+                value=value, type=self.value_type))
         self.store[key] = value
 
     def __delitem__(self, key):
