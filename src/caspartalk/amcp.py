@@ -4,7 +4,7 @@ import StringIO
 import string
 import CasparExceptions
 import CasparObjects
-import casparServer
+import CasparServer
 
 
 # Query commands - return info about various things

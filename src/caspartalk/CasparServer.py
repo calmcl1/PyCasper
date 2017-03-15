@@ -1,5 +1,5 @@
 import socket
-import AMCP
+import amcp
 import ResponseInterpreter
 from enum import Enum
 
