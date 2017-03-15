@@ -58,3 +58,4 @@ target/
 
 # PyCharm
 .idea/
+src/.vscode/settings.json
